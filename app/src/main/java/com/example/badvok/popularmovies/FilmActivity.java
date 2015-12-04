@@ -63,7 +63,8 @@ public class FilmActivity extends AppCompatActivity {
     }
 
     /**
-     * A placeholder fragment containing a simple view.
+     * A placeholder fragment containing fragment_film
+     * a detail view for films
      */
     public static class PlaceholderFragment extends Fragment {
 

@@ -25,6 +25,13 @@ public class FetchFilmsTask extends AsyncTask<String, Void, ArrayList<FilmsItem>
     FilmsDataListener listener;
 
 
+    /**
+     *
+     * @param filmsJsonStr string of json
+     * @return List of Film Items. See FilmItem
+     * @throws JSONException
+     */
+
     private ArrayList<FilmsItem> getPosterPath(String filmsJsonStr) throws JSONException {
 
         final String RESULTS = "results";
@@ -65,6 +72,14 @@ public class FetchFilmsTask extends AsyncTask<String, Void, ArrayList<FilmsItem>
     }
 
 
+    /**
+     * Gets the data from theMovieDb based of the provided sort param
+     * Note: if ApiKey does not exist comment it out and use your own key
+     * if it does exist then...oops.
+     * @param params order param, either popularity_desc or rating_desc
+     * @return a string of json
+     */
+
     @Override
     protected ArrayList<FilmsItem> doInBackground(String... params) {
 
@@ -72,7 +87,6 @@ public class FetchFilmsTask extends AsyncTask<String, Void, ArrayList<FilmsItem>
         BufferedReader reader = null;
 
         ApiKey mApiKey = new ApiKey();
-
         String key = mApiKey.getKey();
 
         final String BASE_URL = "http://api.themoviedb.org/3/discover/movie?";

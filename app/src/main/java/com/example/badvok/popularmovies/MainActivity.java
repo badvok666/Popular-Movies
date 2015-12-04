@@ -34,16 +34,11 @@ public class MainActivity extends AppCompatActivity {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.filmRecyclerView);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-
         refreshData(ORDER_PARAMATER);
-
-
         onClickListeners();
-
     }
 
     public void onClickListeners() {
-
         mRecyclerView.addOnItemTouchListener(
                 new FilmRecyclerViewClickListener(getApplicationContext(), new FilmRecyclerViewClickListener.OnItemClickListener() {
                     @Override
@@ -68,9 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        //Order Paramater and refresh are located here
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
@@ -87,8 +80,11 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    
 
+    /**
+     * Gets the data on AyncTask based on the provided order paramater
+     * @param order_param
+     */
     public void refreshData(String order_param) {
         FetchFilmsTask fft = new FetchFilmsTask();
         fft.execute(order_param);
