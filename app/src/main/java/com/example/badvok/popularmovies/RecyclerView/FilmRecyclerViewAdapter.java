@@ -21,7 +21,7 @@ public class FilmRecyclerViewAdapter extends RecyclerView.Adapter<FilmRecyclerVi
 
     ArrayList<FilmsItem> films;
 
-    public FilmRecyclerViewAdapter(ArrayList<FilmsItem> films){
+    public FilmRecyclerViewAdapter(ArrayList<FilmsItem> films) {
         this.films = films;
     }
 
@@ -30,24 +30,17 @@ public class FilmRecyclerViewAdapter extends RecyclerView.Adapter<FilmRecyclerVi
         super.onAttachedToRecyclerView(recyclerView);
     }
 
+
     @Override
     public int getItemCount() {
         return films.size();
     }
 
+
     @Override
     public void onBindViewHolder(FilmViewHolder holder, int position) {
-      //  holder.title.setText(films.get(position).filmName);
-       // holder.rating.setText(films.get(position).rating + "/10");
-       // holder.description.setText(films.get(position).description);
-        Context ctx = holder.itemView.getContext();
-        //"http://image.tmdb.org/t/p/w500//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg"
-        Picasso.with(holder.itemView.getContext()).load("http://image.tmdb.org/t/p/w500//"+films.get(position).getPoster_path()).into(holder.imageView);
-
-
-
+        Picasso.with(holder.itemView.getContext()).load("http://image.tmdb.org/t/p/w500//" + films.get(position).getPoster_path()).into(holder.imageView);
     }
-
 
 
     @Override
@@ -55,34 +48,20 @@ public class FilmRecyclerViewAdapter extends RecyclerView.Adapter<FilmRecyclerVi
 
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view, parent, false);
         FilmViewHolder fvh = new FilmViewHolder(v);
-        return  fvh;
+        return fvh;
     }
 
-    public static class FilmViewHolder extends RecyclerView.ViewHolder{
+
+    public static class FilmViewHolder extends RecyclerView.ViewHolder {
 
         CardView cv;
-    //    TextView title,rating,description;
         ImageView imageView;
 
         public FilmViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.cv);
-        //    title = (TextView)itemView.findViewById(R.id.title);
-       //     rating = (TextView)itemView.findViewById(R.id.rating);
-        //    description = (TextView)itemView.findViewById(R.id.description);
-            imageView = (ImageView)itemView.findViewById(R.id.card_img_view);
+            cv = (CardView) itemView.findViewById(R.id.cv);
+            imageView = (ImageView) itemView.findViewById(R.id.card_img_view);
 
-            onClickListeners();
         }
-
-        public void onClickListeners(){
-            cv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                //    Log.d("")
-                }
-            });
-        }
-
     }
 }

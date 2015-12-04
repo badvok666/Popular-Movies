@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView mRecyclerView;
     ArrayList<FilmsItem> films;
-    String ORDER_PARAMATER ="popularity.desc";
+    String ORDER_PARAMATER = "popularity.desc";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,26 +32,25 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mRecyclerView = (RecyclerView)findViewById(R.id.filmRecyclerView);
+        mRecyclerView = (RecyclerView) findViewById(R.id.filmRecyclerView);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         refreshData(ORDER_PARAMATER);
 
-       // Intent intent = new Intent(MainActivity.this,FilmActivity.class);
-      //  MainActivity.this.startActivity(intent);
+
         onClickListeners();
 
     }
 
-    public void onClickListeners(){
+    public void onClickListeners() {
 
         mRecyclerView.addOnItemTouchListener(
                 new FilmRecyclerViewClickListener(getApplicationContext(), new FilmRecyclerViewClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Log.d("log","asd" + position );
+                        Log.d("log", "asd" + position);
                         FilmsItem fm = films.get(position);
-                        Intent intent = new Intent(MainActivity.this , FilmActivity.class)
+                        Intent intent = new Intent(MainActivity.this, FilmActivity.class)
                                 .putExtra("com.example.badvok.pupularmovies.FilmsItem", fm);
                         startActivity(intent);
                     }
@@ -74,23 +73,23 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        }else if(id == R.id.refresh_list){
+        } else if (id == R.id.refresh_list) {
             refreshData(ORDER_PARAMATER);
-        }else if(id == R.id.order_by_pop_desc){
+        } else if (id == R.id.order_by_pop_desc) {
             ORDER_PARAMATER = "popularity.desc";
             refreshData(ORDER_PARAMATER);
-        }else if(id == R.id.order_by_highest_rated){
+        } else if (id == R.id.order_by_highest_rated) {
             ORDER_PARAMATER = "rating.desc";
             refreshData(ORDER_PARAMATER);
         }
 
         return super.onOptionsItemSelected(item);
     }
+    
 
-    public void refreshData(String order_param){
+    public void refreshData(String order_param) {
         FetchFilmsTask fft = new FetchFilmsTask();
         fft.execute(order_param);
         fft.setFilmsDataListener(new FilmsDataListener() {

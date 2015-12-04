@@ -21,7 +21,6 @@ import com.squareup.picasso.Picasso;
 public class FilmActivity extends AppCompatActivity {
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,10 +31,9 @@ public class FilmActivity extends AppCompatActivity {
                     .commit();
         }
 
-            if(getActionBar() != null){
-                getActionBar().setDisplayHomeAsUpEnabled(true);
-            }
-
+        if (getActionBar() != null) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
 
     }
@@ -47,6 +45,7 @@ public class FilmActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.detail, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -78,35 +77,27 @@ public class FilmActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-
             View rootView = inflater.inflate(R.layout.fragment_film, container, false);
-            title = (TextView)rootView.findViewById(R.id.title);
-            rating = (TextView)rootView.findViewById(R.id.rating);
-            releaseDate = (TextView)rootView.findViewById(R.id.release_date);
-            description = (TextView)rootView.findViewById(R.id.description);
-            poster = (ImageView)rootView.findViewById(R.id.poster);
+            title = (TextView) rootView.findViewById(R.id.title);
+            rating = (TextView) rootView.findViewById(R.id.rating);
+            releaseDate = (TextView) rootView.findViewById(R.id.release_date);
+            description = (TextView) rootView.findViewById(R.id.description);
+            poster = (ImageView) rootView.findViewById(R.id.poster);
             Intent intent = getActivity().getIntent();
 
 
-            if(intent != null && intent.hasExtra("com.example.badvok.pupularmovies.FilmsItem")){
+            if (intent != null && intent.hasExtra("com.example.badvok.pupularmovies.FilmsItem")) {
 
                 Bundle b = intent.getExtras();
                 FilmsItem film = b.getParcelable("com.example.badvok.pupularmovies.FilmsItem");
-             //   textView = (TextView)rootView.findViewById(R.id.text_view);
                 title.setText(film.getTitle());
-                rating.setText(film.getVote_average()+"/10");
+                rating.setText(film.getVote_average() + "/10");
                 releaseDate.setText(film.getRelease_date());
                 description.setText(film.getOverview());
-                Picasso.with(getContext()).load("http://image.tmdb.org/t/p/w500//"+film.getPoster_path()).into(poster);
+                Picasso.with(getContext()).load("http://image.tmdb.org/t/p/w500//" + film.getPoster_path()).into(poster);
 
 
             }
-
-
-
-
-
-
             return rootView;
         }
     }

@@ -13,17 +13,18 @@ import android.widget.AdapterView;
 public class FilmRecyclerViewClickListener implements RecyclerView.OnItemTouchListener {
     private OnItemClickListener mListener;
 
-    public interface OnItemClickListener{
+    public interface OnItemClickListener {
         public void onItemClick(View view, int position);
     }
+
 
     GestureDetector mGestureDetector;
 
     public FilmRecyclerViewClickListener(Context context, OnItemClickListener listener) {
         mListener = listener;
-        mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener(){
+        mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
-        public boolean onSingleTapUp(MotionEvent e){
+            public boolean onSingleTapUp(MotionEvent e) {
                 return true;
             }
         });
@@ -36,10 +37,12 @@ public class FilmRecyclerViewClickListener implements RecyclerView.OnItemTouchLi
 
     }
 
+
     @Override
     public void onTouchEvent(RecyclerView rv, MotionEvent e) {
 
     }
+
 
     @Override
     public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {

@@ -32,10 +32,11 @@ public class FilmsItem implements Parcelable {
         return id;
     }
 
-    public String getTitle(){
+    public String getTitle() {
         return title;
     }
-    public void setTitle(String title){
+
+    public void setTitle(String title) {
         this.title = title;
     }
 
@@ -86,7 +87,8 @@ public class FilmsItem implements Parcelable {
 
     }
 
-    private void readFromParcel(Parcel in){
+
+    private void readFromParcel(Parcel in) {
 
         title = in.readString();
         id = in.readString();
@@ -96,6 +98,7 @@ public class FilmsItem implements Parcelable {
         vote_average = in.readDouble();
 
     }
+
 
     @Override
     public int describeContents() {
