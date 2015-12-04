@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             ORDER_PARAMATER = "popularity.desc";
             refreshData(ORDER_PARAMATER);
         } else if (id == R.id.order_by_highest_rated) {
-            ORDER_PARAMATER = "rating.asc";
+            ORDER_PARAMATER = "rating.desc";
             refreshData(ORDER_PARAMATER);
         }
 
