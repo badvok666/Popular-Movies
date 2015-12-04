@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -86,6 +87,7 @@ public class FilmActivity extends AppCompatActivity {
             poster = (ImageView) rootView.findViewById(R.id.poster);
             Intent intent = getActivity().getIntent();
 
+            description.setMovementMethod(new ScrollingMovementMethod());
 
             if (intent != null && intent.hasExtra("com.example.badvok.pupularmovies.FilmsItem")) {
 
