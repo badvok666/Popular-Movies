@@ -87,6 +87,7 @@ public class FilmActivity extends AppCompatActivity {
             poster = (ImageView) rootView.findViewById(R.id.poster);
             Intent intent = getActivity().getIntent();
 
+
             description.setMovementMethod(new ScrollingMovementMethod());
 
             if (intent != null && intent.hasExtra("com.example.badvok.pupularmovies.FilmsItem")) {
