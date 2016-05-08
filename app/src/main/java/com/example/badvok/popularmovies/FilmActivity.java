@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -99,6 +100,7 @@ public class FilmActivity extends AppCompatActivity {
                 releaseDate.setText(film.getRelease_date());
                 description.setText(film.getOverview());
                 Picasso.with(getContext()).load("http://image.tmdb.org/t/p/w500//" + film.getPoster_path()).into(poster);
+                Log.d("apistuff", film.getId());
 
 
             }

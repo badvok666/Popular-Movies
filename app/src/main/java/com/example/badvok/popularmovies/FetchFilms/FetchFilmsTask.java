@@ -86,12 +86,13 @@ public class FetchFilmsTask extends AsyncTask<String, Void, ArrayList<FilmsItem>
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
-        ApiKey mApiKey = new ApiKey();
-        String key = mApiKey.getKey();
+        ApiKey ApiKey = new ApiKey();
+        String key = ApiKey.getKey();
 
         final String BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
         final String SORT_BY = "sort_by";
         final String API_KEY = "api_key";
+
 
 
         try {
