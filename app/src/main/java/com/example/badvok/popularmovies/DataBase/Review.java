@@ -7,10 +7,10 @@ import io.realm.RealmObject;
  */
 public class Review extends RealmObject{
 
-    String id;
-    String author;
-    String content;
-    String url;
+    private String id;
+    private String author;
+    private String content;
+    private String url;
 
     public String getId() {
         return id;
@@ -49,5 +49,9 @@ public class Review extends RealmObject{
         this.author = author;
         this.content = content;
         this.url = url;
+    }
+
+    public Review(){
+
     }
 }

@@ -4,53 +4,46 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.badvok.popularmovies.AppDelegate;
-import com.example.badvok.popularmovies.DataBase.Review;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import io.realm.Realm;
-
 /**
- * Created by simon on 08-May-16.
+ * Created by badvok on 09-May-16.
  */
-public class FetchReviewTask extends AsyncTask<String, Void, Void>{
+public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
 
-    String reviewJsonStr = null;
+    String filmsJsonStr;
 
 
     @Override
     protected Void doInBackground(String... params) {
-
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
-        ApiKey apiKey = new ApiKey();
-        String key = apiKey.getKey();
+        ApiKey ApiKey = new ApiKey();
+        String key = ApiKey.getKey();
 
-        final String BASE_URL = "http://api.themoviedb.org/3/movie/";
+        final String BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
         final String SORT_BY = "sort_by";
-        final String REVIEW = "reviews";
         final String API_KEY = "api_key";
-        final String MOVIE_ID = "209112";
+
+
 
         try {
+
             Uri builtUri = Uri.parse(BASE_URL).buildUpon()
-                    .appendPath(MOVIE_ID)
-                    .appendPath(REVIEW)
                     .appendQueryParameter(SORT_BY, params[0])
                     .appendQueryParameter(API_KEY, key)
                     .build();
+
 
             URL url = new URL(builtUri.toString());
             Log.d("url", url + "");
@@ -75,12 +68,12 @@ public class FetchReviewTask extends AsyncTask<String, Void, Void>{
                 return null;
             }
 
-            reviewJsonStr = buffer.toString();
+            filmsJsonStr = buffer.toString();
 
 
-        }catch (IOException e){
+        } catch (IOException e) {
             Log.e("FetchFilmsTask", "Error ", e);
-        }finally {
+        } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
@@ -91,47 +84,30 @@ public class FetchReviewTask extends AsyncTask<String, Void, Void>{
                     Log.e("FetchFilmsTask", "Error closing stream ", e);
                 }
             }
-        } try {
-            createObject(reviewJsonStr);
+        }
+
+        try {
+            createObject(filmsJsonStr);
         } catch (JSONException e) {
             Log.e("JsonError", e.getMessage(), e);
             e.printStackTrace();
         }
+
         return null;
     }
 
-    private void createObject(String jsonStr)throws JSONException{
+    private void createObject(String jsonStr) throws JSONException{
 
-        String RESULTS = "results";
-        String ID = "id";
-        String AUTHOR = "author";
-        String CONTENT = "content";
-        String URL = "url";
+        final String RESULTS = "results";
+        final String TITLE = "title";
+        final String ID = "id";
+        final String POSTER_PATH = "poster_path";
+        final String RELEASE_DATE = "release_date";
+        final String OVERVIEW = "overview";
+        final String VOTE_AVERAGE = "vote_average";
 
-        JSONObject reviewListJson = new JSONObject(jsonStr);
-        JSONArray resultsArray = reviewListJson.getJSONArray(RESULTS);
-
-        for (int i = 0; i < resultsArray.length(); i++) {
-            JSONObject reviewJSON = resultsArray.getJSONObject(i);
-
-
-            Review review = new Review(
-                    reviewJSON.getString(ID),
-                    reviewJSON.getString(AUTHOR),
-                    reviewJSON.getString(CONTENT),
-                    reviewJSON.getString(URL)
-            );
-            Realm realm = AppDelegate.getRealmInstance();
-            try{
-                realm.beginTransaction();
-                realm.copyToRealm(review);
-                realm.commitTransaction();
-
-            } catch (Exception e) {
-                Log.e("RealmError", "error" + e);
-                realm.cancelTransaction();
-            }
-        }
+        JSONObject filmsListJSON = new JSONObject(filmsJsonStr);
+        JSONArray resultsArray = filmsListJSON.getJSONArray(RESULTS);
     }
 
     @Override
@@ -140,12 +116,12 @@ public class FetchReviewTask extends AsyncTask<String, Void, Void>{
     }
 
     @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
+    protected void onPreExecute() {
+        super.onPreExecute();
     }
 
     @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
     }
 }

@@ -7,12 +7,12 @@ import io.realm.RealmObject;
  */
 public class Film extends RealmObject {
 
-    String title;
-    String id;
-    String poster_path;
-    String release_date;
-    String overview;
-    double vote_average;
+    private String title;
+    private String id;
+    private String poster_path;
+    private String release_date;
+    private String overview;
+    private double vote_average;
 
     public String getTitle() {
         return title;

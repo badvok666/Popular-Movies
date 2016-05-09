@@ -11,13 +11,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.badvok.popularmovies.DataBase.Review;
 import com.example.badvok.popularmovies.FetchFilms.FetchFilmsTask;
+import com.example.badvok.popularmovies.FetchFilms.FetchReviewTask;
 import com.example.badvok.popularmovies.FetchFilms.FilmsDataListener;
 import com.example.badvok.popularmovies.FetchFilms.FilmsItem;
 import com.example.badvok.popularmovies.RecyclerView.FilmRecyclerViewAdapter;
 import com.example.badvok.popularmovies.RecyclerView.FilmRecyclerViewClickListener;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -96,5 +101,16 @@ public class MainActivity extends AppCompatActivity {
                 mRecyclerView.setAdapter(frva);
             }
         });
+
+        FetchReviewTask frt = new FetchReviewTask();
+        frt.execute(order_param);
+
+        Realm realm = AppDelegate.getRealmInstance();
+        List<Review> reviews = realm.where(Review.class).findAll();
+
+        for (int i = 0; i < reviews.size(); i++) {
+            Log.d("reviews",reviews.get(i).getAuthor()+"");
+        }
+
     }
 }

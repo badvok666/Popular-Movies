@@ -7,14 +7,14 @@ import io.realm.RealmObject;
  */
 public class Trailer extends RealmObject {
 
-    String id;
-    String iso_693_1;
-    String iso_3166_1;
-    String key;
-    String name;
-    String site;
-    int size;
-    String type;
+    private String id;
+    private String iso_693_1;
+    private String iso_3166_1;
+    private String key;
+    private String name;
+    private String site;
+    private int size;
+    private String type;
 
     public String getId() {
         return id;
