@@ -61,4 +61,16 @@ public class Film extends RealmObject {
     public void setVote_average(double vote_average) {
         this.vote_average = vote_average;
     }
+
+    public Film(String title, String id, String poster_path, String release_date, String overview, double vote_average) {
+        this.vote_average = vote_average;
+        this.title = title;
+        this.id = id;
+        this.poster_path = poster_path;
+        this.release_date = release_date;
+        this.overview = overview;
+    }
+    public Film() {
+
+    }
 }

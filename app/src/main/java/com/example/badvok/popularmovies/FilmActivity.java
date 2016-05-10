@@ -14,8 +14,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.badvok.popularmovies.DataBase.Film;
 import com.example.badvok.popularmovies.FetchFilms.FilmsItem;
 import com.squareup.picasso.Picasso;
+
+import io.realm.Realm;
 
 /**
  * Created by badvok on 29-Nov-15.
@@ -93,8 +96,14 @@ public class FilmActivity extends AppCompatActivity {
 
             if (intent != null && intent.hasExtra("com.example.badvok.pupularmovies.FilmsItem")) {
 
+
                 Bundle b = intent.getExtras();
-                FilmsItem film = b.getParcelable("com.example.badvok.pupularmovies.FilmsItem");
+                String filmId = intent.getStringExtra("com.example.badvok.pupularmovies.Film");
+
+                Realm realm = AppDelegate.getRealmInstance();
+                Film film = realm.where(Film.class).equalTo("id",filmId).findFirst();
+
+                //FilmsItem film = b.getParcelable("com.example.badvok.pupularmovies.FilmsItem");
                 title.setText(film.getTitle());
                 rating.setText(film.getVote_average() + "/10");
                 releaseDate.setText(film.getRelease_date());

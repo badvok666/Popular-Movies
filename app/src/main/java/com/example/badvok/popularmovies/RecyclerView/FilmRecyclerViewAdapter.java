@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.badvok.popularmovies.DataBase.Film;
 import com.example.badvok.popularmovies.FetchFilms.FilmsItem;
 import com.example.badvok.popularmovies.R;
 import com.squareup.picasso.Picasso;
@@ -19,9 +20,9 @@ import java.util.ArrayList;
  */
 public class FilmRecyclerViewAdapter extends RecyclerView.Adapter<FilmRecyclerViewAdapter.FilmViewHolder> {
 
-    ArrayList<FilmsItem> films;
+    ArrayList<Film> films;
 
-    public FilmRecyclerViewAdapter(ArrayList<FilmsItem> films) {
+    public FilmRecyclerViewAdapter(ArrayList<Film> films) {
         this.films = films;
     }
 

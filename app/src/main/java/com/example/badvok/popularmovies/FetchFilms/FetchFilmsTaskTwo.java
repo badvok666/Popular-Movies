@@ -4,6 +4,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.badvok.popularmovies.AppDelegate;
+import com.example.badvok.popularmovies.DataBase.Film;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,6 +17,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import io.realm.Realm;
 
 /**
  * Created by badvok on 09-May-16.
@@ -108,6 +113,33 @@ public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
 
         JSONObject filmsListJSON = new JSONObject(filmsJsonStr);
         JSONArray resultsArray = filmsListJSON.getJSONArray(RESULTS);
+
+        String[] posterPaths = new String[resultsArray.length()];
+
+        for (int i = 0; i < resultsArray.length(); i++) {
+            JSONObject filmJSON = resultsArray.getJSONObject(i);
+            String posterPath = filmJSON.getString(POSTER_PATH);
+
+            Film film = new Film(
+                    filmJSON.getString(TITLE),
+                    filmJSON.getString(ID),
+                    filmJSON.getString(POSTER_PATH),
+                    filmJSON.getString(RELEASE_DATE),
+                    filmJSON.getString(OVERVIEW),
+                    filmJSON.getDouble(VOTE_AVERAGE)
+            );
+            Realm realm = AppDelegate.getRealmInstance();
+            try{
+                realm.beginTransaction();
+                realm.copyToRealm(film);
+                realm.commitTransaction();
+
+            } catch (Exception e) {
+                Log.e("RealmError", "error" + e);
+                realm.cancelTransaction();
+            }
+
+        }
     }
 
     @Override

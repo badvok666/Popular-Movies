@@ -11,8 +11,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.badvok.popularmovies.DataBase.Film;
 import com.example.badvok.popularmovies.DataBase.Review;
 import com.example.badvok.popularmovies.FetchFilms.FetchFilmsTask;
+import com.example.badvok.popularmovies.FetchFilms.FetchFilmsTaskTwo;
 import com.example.badvok.popularmovies.FetchFilms.FetchReviewTask;
 import com.example.badvok.popularmovies.FetchFilms.FilmsDataListener;
 import com.example.badvok.popularmovies.FetchFilms.FilmsItem;
@@ -27,7 +29,9 @@ import io.realm.Realm;
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView mRecyclerView;
-    ArrayList<FilmsItem> films;
+
+    ArrayList<FilmsItem> films2;
+    ArrayList<Film>films;
     String ORDER_PARAMATER = "popularity.desc";
 
     @Override
@@ -49,9 +53,10 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(View view, int position) {
                         Log.d("log", "asd" + position);
-                        FilmsItem fm = films.get(position);
-                        Intent intent = new Intent(MainActivity.this, FilmActivity.class)
-                                .putExtra("com.example.badvok.pupularmovies.FilmsItem", fm);
+
+                       // FilmsItem fm2 = films.get(position);
+                        String filmId = films.get(position).getId();
+                        Intent intent = new Intent(MainActivity.this, FilmActivity.class).putExtra("com.example.badvok.pupularmovies.Film", filmId);
                         startActivity(intent);
                     }
                 })
@@ -91,16 +96,19 @@ public class MainActivity extends AppCompatActivity {
      * @param order_param
      */
     public void refreshData(String order_param) {
-        FetchFilmsTask fft = new FetchFilmsTask();
+      /*   FetchFilmsTask fft = new FetchFilmsTask();
         fft.execute(order_param);
-        fft.setFilmsDataListener(new FilmsDataListener() {
+       fft.setFilmsDataListener(new FilmsDataListener() {
             @Override
             public void onFilmsPosterPathsPopulated(ArrayList<FilmsItem> data) {
                 films = data;
                 FilmRecyclerViewAdapter frva = new FilmRecyclerViewAdapter(films);
                 mRecyclerView.setAdapter(frva);
             }
-        });
+        });*/
+
+        FetchFilmsTaskTwo fetchFilmsTaskTwo = new FetchFilmsTaskTwo();
+        fetchFilmsTaskTwo.execute(order_param);
 
         FetchReviewTask frt = new FetchReviewTask();
         frt.execute(order_param);
@@ -111,6 +119,8 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < reviews.size(); i++) {
             Log.d("reviews",reviews.get(i).getAuthor()+"");
         }
+        FilmRecyclerViewAdapter frva = new FilmRecyclerViewAdapter(films);
+        mRecyclerView.setAdapter(frva);
 
     }
 }
