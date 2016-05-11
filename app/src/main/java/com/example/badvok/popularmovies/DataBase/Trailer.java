@@ -16,6 +16,20 @@ public class Trailer extends RealmObject {
     private int size;
     private String type;
 
+    public Trailer(String id, String iso_693_1, String iso_3166_1, String key, String name, String site, int size, String type) {
+        this.id = id;
+        this.iso_693_1 = iso_693_1;
+        this.iso_3166_1 = iso_3166_1;
+        this.key = key;
+        this.name = name;
+        this.site = site;
+        this.size = size;
+        this.type = type;
+    }
+
+    public Trailer() {
+    }
+
     public String getId() {
         return id;
     }
