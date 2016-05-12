@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.badvok.popularmovies.DataBase.Film;
-import com.example.badvok.popularmovies.FetchFilms.FilmsItem;
+import com.example.badvok.popularmovies.FetchFilms.FetchTrailerTask;
 import com.squareup.picasso.Picasso;
 
 import io.realm.Realm;
@@ -99,6 +99,9 @@ public class FilmActivity extends AppCompatActivity {
 
                 Bundle b = intent.getExtras();
                 String filmId = intent.getStringExtra("com.example.badvok.pupularmovies.Film");
+
+                FetchTrailerTask fetchTrailerTask = new FetchTrailerTask();
+                fetchTrailerTask.execute(AppDelegate.ORDER_PERAM);
 
                 Realm realm = AppDelegate.getRealmInstance();
                 Film film = realm.where(Film.class).equalTo("id",filmId).findFirst();

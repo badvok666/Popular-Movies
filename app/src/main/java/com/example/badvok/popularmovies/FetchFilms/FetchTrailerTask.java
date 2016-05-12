@@ -23,7 +23,7 @@ import io.realm.Realm;
 /**
  * Created by simon on 11-May-16.
  */
-public class FecthTrailerTask extends AsyncTask<String, Void, Void>{
+public class FetchTrailerTask extends AsyncTask<String, Void, Void>{
 
     String trailersJsonStr;
 

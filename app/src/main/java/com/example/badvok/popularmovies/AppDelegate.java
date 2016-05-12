@@ -12,6 +12,8 @@ public class AppDelegate extends Application {
 
     public static Context ctx;
 
+    public static String ORDER_PERAM = " popularity.desc";
+
     public static Realm getRealmInstance() {
         return Realm.getInstance(ctx);
     }

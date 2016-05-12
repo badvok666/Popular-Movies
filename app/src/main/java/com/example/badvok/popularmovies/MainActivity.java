@@ -58,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
                         String filmId = films.get(position).getId();
                         Intent intent = new Intent(MainActivity.this, FilmActivity.class).putExtra("com.example.badvok.pupularmovies.Film", filmId);
                         startActivity(intent);
+
+                        //get review and trailer shit
                     }
                 })
         );
