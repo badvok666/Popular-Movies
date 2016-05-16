@@ -18,6 +18,7 @@ import com.example.badvok.popularmovies.FetchFilms.FetchFilmsTaskTwo;
 import com.example.badvok.popularmovies.FetchFilms.FetchReviewTask;
 import com.example.badvok.popularmovies.FetchFilms.FilmsDataListener;
 import com.example.badvok.popularmovies.FetchFilms.FilmsItem;
+import com.example.badvok.popularmovies.FetchFilms.Interfaces.FetchFilmsListener;
 import com.example.badvok.popularmovies.RecyclerView.FilmRecyclerViewAdapter;
 import com.example.badvok.popularmovies.RecyclerView.FilmRecyclerViewClickListener;
 
@@ -111,6 +112,23 @@ public class MainActivity extends AppCompatActivity {
 
         FetchFilmsTaskTwo fetchFilmsTaskTwo = new FetchFilmsTaskTwo();
         fetchFilmsTaskTwo.execute(order_param);
+        fetchFilmsTaskTwo.setFetchFilmsListener(new FetchFilmsListener() {
+            @Override
+            public void onComplete() {
+                FilmRecyclerViewAdapter frva = new FilmRecyclerViewAdapter(films);
+                mRecyclerView.setAdapter(frva);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+
+            @Override
+            public void onProgress() {
+
+            }
+        });
 
         FetchReviewTask frt = new FetchReviewTask();
         frt.execute(order_param);
@@ -121,8 +139,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < reviews.size(); i++) {
             Log.d("reviews",reviews.get(i).getAuthor()+"");
         }
-        FilmRecyclerViewAdapter frva = new FilmRecyclerViewAdapter(films);
-        mRecyclerView.setAdapter(frva);
+
 
     }
 }

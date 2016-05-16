@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.example.badvok.popularmovies.AppDelegate;
 import com.example.badvok.popularmovies.DataBase.Film;
+import com.example.badvok.popularmovies.FetchFilms.Interfaces.FetchFilmsListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,6 +27,12 @@ import io.realm.Realm;
 public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
 
     String filmsJsonStr;
+    FetchFilmsListener listener;
+
+    public void setFetchFilmsListener(FetchFilmsListener listener){
+        this.listener = listener;
+
+    }
 
 
     @Override
@@ -129,6 +136,8 @@ public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
                     filmJSON.getDouble(VOTE_AVERAGE)
             );
             Realm realm = AppDelegate.getRealmInstance();
+
+            //TODO realm listener
             try{
                 realm.beginTransaction();
                 realm.copyToRealm(film);
@@ -137,8 +146,12 @@ public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
             } catch (Exception e) {
                 Log.e("RealmError", "error" + e);
                 realm.cancelTransaction();
+
             }
 
+        }
+        if(listener != null){
+            listener.onComplete();
         }
     }
 
