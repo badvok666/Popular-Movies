@@ -1,5 +1,10 @@
 package com.example.badvok.popularmovies.DataBase;
 
+import android.util.Log;
+
+import com.example.badvok.popularmovies.AppDelegate;
+
+import io.realm.Realm;
 import io.realm.RealmObject;
 
 /**
@@ -72,5 +77,38 @@ public class Film extends RealmObject {
     }
     public Film() {
 
+    }
+
+    public static void clearTable(){
+        Realm realm = AppDelegate.getRealmInstance();
+        try {
+            realm.beginTransaction();
+
+            realm.where(Film.class).findAll().clear();
+
+            realm.commitTransaction();
+        } catch (Exception e) {
+            Log.e("Realm Error", "error" + e);
+            realm.cancelTransaction();
+
+        }
+
+    }
+
+    public static void commitNewFilm(Film film){
+
+        Realm realm = AppDelegate.getRealmInstance();
+
+        //TODO realm listener
+        try{
+            realm.beginTransaction();
+            realm.copyToRealm(film);
+            realm.commitTransaction();
+
+        } catch (Exception e) {
+            Log.e("RealmError", "error" + e);
+            realm.cancelTransaction();
+
+        }
     }
 }

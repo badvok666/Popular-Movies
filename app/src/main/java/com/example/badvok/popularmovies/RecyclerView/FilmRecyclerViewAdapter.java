@@ -14,15 +14,16 @@ import com.example.badvok.popularmovies.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by badvok on 28-Nov-15.
  */
 public class FilmRecyclerViewAdapter extends RecyclerView.Adapter<FilmRecyclerViewAdapter.FilmViewHolder> {
 
-    ArrayList<Film> films;
+    List<Film> films;
 
-    public FilmRecyclerViewAdapter(ArrayList<Film> films) {
+    public FilmRecyclerViewAdapter(List<Film> films) {
         this.films = films;
     }
 

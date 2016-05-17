@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView mRecyclerView;
 
     ArrayList<FilmsItem> films2;
-    ArrayList<Film>films;
+    List<Film>films;
     String ORDER_PARAMATER = "popularity.desc";
 
     @Override
@@ -115,6 +115,12 @@ public class MainActivity extends AppCompatActivity {
         fetchFilmsTaskTwo.setFetchFilmsListener(new FetchFilmsListener() {
             @Override
             public void onComplete() {
+
+                Realm realm = AppDelegate.getRealmInstance();
+
+                films = realm.where(Film.class).findAll();
+
+
                 FilmRecyclerViewAdapter frva = new FilmRecyclerViewAdapter(films);
                 mRecyclerView.setAdapter(frva);
             }

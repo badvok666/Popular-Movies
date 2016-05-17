@@ -34,7 +34,6 @@ public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
 
     }
 
-
     @Override
     protected Void doInBackground(String... params) {
         HttpURLConnection urlConnection = null;
@@ -110,6 +109,8 @@ public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
 
     private void createObject(String jsonStr) throws JSONException{
 
+        Film.clearTable();
+
         final String RESULTS = "results";
         final String TITLE = "title";
         final String ID = "id";
@@ -127,6 +128,7 @@ public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
             JSONObject filmJSON = resultsArray.getJSONObject(i);
             String posterPath = filmJSON.getString(POSTER_PATH);
 
+
             Film film = new Film(
                     filmJSON.getString(TITLE),
                     filmJSON.getString(ID),
@@ -135,6 +137,11 @@ public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
                     filmJSON.getString(OVERVIEW),
                     filmJSON.getDouble(VOTE_AVERAGE)
             );
+
+            Film.commitNewFilm(film);
+
+
+
             Realm realm = AppDelegate.getRealmInstance();
 
             //TODO realm listener
@@ -150,9 +157,7 @@ public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
             }
 
         }
-        if(listener != null){
-            listener.onComplete();
-        }
+
     }
 
     @Override
@@ -167,6 +172,9 @@ public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
+        if(listener != null){
+            listener.onComplete();
+        }
         super.onPostExecute(aVoid);
     }
 }
