@@ -1,5 +1,10 @@
 package com.example.badvok.popularmovies.DataBase;
 
+import com.example.badvok.popularmovies.AppDelegate;
+
+import java.util.List;
+
+import io.realm.Realm;
 import io.realm.RealmObject;
 
 /**
@@ -52,6 +57,20 @@ public class Review extends RealmObject{
     }
 
     public Review(){
+
+    }
+
+    public static Review getReview(String id){
+        Realm realm = AppDelegate.getRealmInstance();
+
+        return realm.where(Review.class).equalTo("id",id).findFirst();
+
+    }
+
+    public static List<Review> getReviews(String id){
+        Realm realm = AppDelegate.getRealmInstance();
+
+        return realm.where(Review.class).equalTo("id",id).findAll();
 
     }
 }

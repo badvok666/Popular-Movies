@@ -1,5 +1,10 @@
 package com.example.badvok.popularmovies.DataBase;
 
+import com.example.badvok.popularmovies.AppDelegate;
+
+import java.util.List;
+
+import io.realm.Realm;
 import io.realm.RealmObject;
 
 /**
@@ -92,5 +97,19 @@ public class Trailer extends RealmObject {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public static Trailer getTrailer(String id){
+
+        Realm realm = AppDelegate.getRealmInstance();
+
+        return realm.where(Trailer.class).equalTo("id",id).findFirst();
+    }
+
+    public static List<Trailer> getTrailers(String id){
+
+        Realm realm = AppDelegate.getRealmInstance();
+
+        return realm.where(Trailer.class).equalTo("id",id).findAll();
     }
 }

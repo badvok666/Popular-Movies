@@ -120,8 +120,11 @@ public class MainActivity extends AppCompatActivity {
 
                 films = realm.where(Film.class).findAll();
 
-
                 FilmRecyclerViewAdapter frva = new FilmRecyclerViewAdapter(films);
+
+                for (int i = 0; i < films.size(); i++) {
+                    Log.d("filmitem", "Films: " + films.get(i).getTitle());
+                }
                 mRecyclerView.setAdapter(frva);
             }
 
@@ -136,15 +139,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FetchReviewTask frt = new FetchReviewTask();
-        frt.execute(order_param);
+      //  FetchReviewTask frt = new FetchReviewTask();
+     //   frt.execute(order_param);
 
-        Realm realm = AppDelegate.getRealmInstance();
-        List<Review> reviews = realm.where(Review.class).findAll();
+       // Realm realm = AppDelegate.getRealmInstance();
+       // List<Review> reviews = realm.where(Review.class).findAll();
 
-        for (int i = 0; i < reviews.size(); i++) {
-            Log.d("reviews",reviews.get(i).getAuthor()+"");
-        }
+      //  for (int i = 0; i < reviews.size(); i++) {
+     //       Log.d("reviews",reviews.get(i).getAuthor()+"");
+     //   }
 
 
     }

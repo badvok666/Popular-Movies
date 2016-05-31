@@ -15,8 +15,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.badvok.popularmovies.DataBase.Film;
+import com.example.badvok.popularmovies.DataBase.Review;
+import com.example.badvok.popularmovies.DataBase.Trailer;
 import com.example.badvok.popularmovies.FetchFilms.FetchTrailerTask;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import io.realm.Realm;
 
@@ -24,6 +28,7 @@ import io.realm.Realm;
  * Created by badvok on 29-Nov-15.
  */
 public class FilmActivity extends AppCompatActivity {
+
 
 
     @Override
@@ -73,6 +78,8 @@ public class FilmActivity extends AppCompatActivity {
      */
     public static class PlaceholderFragment extends Fragment {
 
+        List<Review> mReviews = null;
+        List<Trailer> mTrailers = null;
         TextView title, rating, releaseDate, description;
         ImageView poster;
 
@@ -91,10 +98,9 @@ public class FilmActivity extends AppCompatActivity {
             poster = (ImageView) rootView.findViewById(R.id.poster);
             Intent intent = getActivity().getIntent();
 
-
             description.setMovementMethod(new ScrollingMovementMethod());
 
-            if (intent != null && intent.hasExtra("com.example.badvok.pupularmovies.FilmsItem")) {
+            if (intent != null && intent.hasExtra("com.example.badvok.pupularmovies.Film")) {
 
 
                 Bundle b = intent.getExtras();
@@ -114,10 +120,27 @@ public class FilmActivity extends AppCompatActivity {
                 Picasso.with(getContext()).load("http://image.tmdb.org/t/p/w500//" + film.getPoster_path()).into(poster);
                 Log.d("apistuff", film.getId());
 
+                mReviews = Review.getReviews(filmId);
+                mTrailers = Trailer.getTrailers(filmId);
+                showReviews();
+
 
             }
             return rootView;
         }
+
+        public void showReviews(){
+
+            for (int i = 0; i < mReviews.size(); i++) {
+                Log.d("reviews",mReviews.get(i).getAuthor());
+            }
+
+
+        }
+
     }
+
+
+
 
 }

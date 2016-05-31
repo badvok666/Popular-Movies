@@ -80,6 +80,7 @@ public class Film extends RealmObject {
     }
 
     public static void clearTable(){
+        //TODO compare id
         Realm realm = AppDelegate.getRealmInstance();
         try {
             realm.beginTransaction();

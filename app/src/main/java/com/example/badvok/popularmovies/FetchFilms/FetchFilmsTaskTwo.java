@@ -140,22 +140,6 @@ public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
 
             Film.commitNewFilm(film);
 
-
-
-            Realm realm = AppDelegate.getRealmInstance();
-
-            //TODO realm listener
-            try{
-                realm.beginTransaction();
-                realm.copyToRealm(film);
-                realm.commitTransaction();
-
-            } catch (Exception e) {
-                Log.e("RealmError", "error" + e);
-                realm.cancelTransaction();
-
-            }
-
         }
 
     }
