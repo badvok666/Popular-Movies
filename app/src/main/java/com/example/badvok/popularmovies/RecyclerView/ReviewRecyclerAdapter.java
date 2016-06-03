@@ -1,6 +1,7 @@
 package com.example.badvok.popularmovies.RecyclerView;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -37,7 +38,11 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
 
     @Override
     public ReviewRecyclerAdapter.ReviewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.reivew_row, parent, false);
+
+        return  new ReviewHolder(v);
+
     }
 
     public static class ReviewHolder extends RecyclerView.ViewHolder{

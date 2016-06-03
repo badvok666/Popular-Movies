@@ -48,6 +48,12 @@ public class FilmActivity extends AppCompatActivity {
 
     }
 
+    public void exchangeFrgment(){
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.container, new ReviewFragment())
+                .commit();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -137,6 +143,10 @@ public class FilmActivity extends AppCompatActivity {
 
 
         }
+
+    }
+
+    public static class ReviewFragment extends Fragment {
 
     }
 
