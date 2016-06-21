@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.example.badvok.popularmovies.AppDelegate;
 import com.example.badvok.popularmovies.DataBase.Trailer;
+import com.example.badvok.popularmovies.FetchFilms.Interfaces.FetchTrailerListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,14 +27,24 @@ import io.realm.Realm;
 public class FetchTrailerTask extends AsyncTask<String, Void, Void>{
 
     String trailersJsonStr;
+    FetchTrailerListener listener;
+
+    public void setFetchTrailerListener(FetchTrailerListener listener){
+        this.listener = listener;
+    }
 
     @Override
     protected void onPreExecute() {
+
         super.onPreExecute();
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
+        if (listener != null) {
+
+            listener.onComplete();
+        }
         super.onPostExecute(aVoid);
     }
 
@@ -55,7 +66,7 @@ public class FetchTrailerTask extends AsyncTask<String, Void, Void>{
         final String SORT_BY = "sort_by";
         final String VIDEOS = "videos";
         final String API_KEY = "api_key";
-        final String MOVIE_ID = "209112";
+        final String MOVIE_ID = params[1];
 
         try{
 
@@ -103,7 +114,7 @@ public class FetchTrailerTask extends AsyncTask<String, Void, Void>{
                 }
             }
         } try {
-            createObject(trailersJsonStr);
+            createObject(trailersJsonStr, params[1]);
         } catch (JSONException e) {
             Log.e("JsonError", e.getMessage(), e);
             e.printStackTrace();
@@ -113,7 +124,7 @@ public class FetchTrailerTask extends AsyncTask<String, Void, Void>{
         return null;
     }
 
-    private void createObject(String json)throws JSONException{
+    private void createObject(String json, String filmId)throws JSONException{
 
         String RESULTS = "results";
         String ID = "id";
@@ -131,9 +142,10 @@ public class FetchTrailerTask extends AsyncTask<String, Void, Void>{
         for (int i = 0; i < resultsArray.length(); i++){
 
             JSONObject trailerJSON = resultsArray.getJSONObject(i);
-
+Log.d("testing", filmId);
             Trailer trailer = new Trailer(
                     trailerJSON.getString(ID),
+                    filmId,
                     trailerJSON.getString(ISO_639_1),
                     trailerJSON.getString(ISO_3166_1),
                     trailerJSON.getString(KEY),
@@ -143,7 +155,8 @@ public class FetchTrailerTask extends AsyncTask<String, Void, Void>{
                     trailerJSON.getString(TYPE)
 
             );
-            Realm realm = AppDelegate.getRealmInstance();
+            Trailer.commitNewTrailer(trailer);
+       /*     Realm realm = AppDelegate.getRealmInstance();
             try{
                 realm.beginTransaction();
                 realm.copyToRealm(trailer);
@@ -152,7 +165,7 @@ public class FetchTrailerTask extends AsyncTask<String, Void, Void>{
             } catch (Exception e) {
                 Log.e("RealmError", "error" + e);
                 realm.cancelTransaction();
-            }
+            }*/
 
         }
 

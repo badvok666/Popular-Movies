@@ -12,10 +12,20 @@ import io.realm.RealmObject;
  */
 public class Review extends RealmObject{
 
+
     private String id;
+    private String filmId;
     private String author;
     private String content;
     private String url;
+
+    public String getFilmId() {
+        return filmId;
+    }
+
+    public void setFilmId(String filmId) {
+        this.filmId = filmId;
+    }
 
     public String getId() {
         return id;
@@ -49,8 +59,9 @@ public class Review extends RealmObject{
         this.url = url;
     }
 
-    public Review(String id, String author, String content, String url) {
+    public Review(String id, String filmId, String author, String content, String url) {
         this.id = id;
+        this.filmId = filmId;
         this.author = author;
         this.content = content;
         this.url = url;

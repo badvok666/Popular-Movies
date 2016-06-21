@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +20,8 @@ import com.example.badvok.popularmovies.DataBase.Film;
 import com.example.badvok.popularmovies.DataBase.Review;
 import com.example.badvok.popularmovies.DataBase.Trailer;
 import com.example.badvok.popularmovies.FetchFilms.FetchTrailerTask;
+import com.example.badvok.popularmovies.FetchFilms.Interfaces.FetchTrailerListener;
+import com.example.badvok.popularmovies.RecyclerView.TrailerRecyclerAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -86,6 +90,7 @@ public class FilmActivity extends AppCompatActivity {
 
         List<Review> mReviews = null;
         List<Trailer> mTrailers = null;
+        RecyclerView recyclerView;
         TextView title, rating, releaseDate, description;
         ImageView poster;
 
@@ -104,18 +109,51 @@ public class FilmActivity extends AppCompatActivity {
             poster = (ImageView) rootView.findViewById(R.id.poster);
             Intent intent = getActivity().getIntent();
 
+
+
+            recyclerView = (RecyclerView) rootView.findViewById(R.id.trailerRecyclerView);
+            recyclerView.setLayoutManager(new GridLayoutManager(AppDelegate.ctx, 1));
+
+
+
+
             description.setMovementMethod(new ScrollingMovementMethod());
 
             if (intent != null && intent.hasExtra("com.example.badvok.pupularmovies.Film")) {
-
+                final Realm realm = AppDelegate.getRealmInstance();
 
                 Bundle b = intent.getExtras();
-                String filmId = intent.getStringExtra("com.example.badvok.pupularmovies.Film");
+                final String filmId = intent.getStringExtra("com.example.badvok.pupularmovies.Film");
 
                 FetchTrailerTask fetchTrailerTask = new FetchTrailerTask();
-                fetchTrailerTask.execute(AppDelegate.ORDER_PERAM);
+                fetchTrailerTask.execute(AppDelegate.ORDER_PERAM, filmId);
+                fetchTrailerTask.setFetchTrailerListener(new FetchTrailerListener() {
+                    @Override
+                    public void onComplete() {
 
-                Realm realm = AppDelegate.getRealmInstance();
+                        List<Trailer> asd =  realm.where(Trailer.class).findAll();
+                        TrailerRecyclerAdapter trailerRecyclerAdapter = new TrailerRecyclerAdapter(realm.where(Trailer.class).equalTo("filmId",filmId).findAll());
+                        recyclerView.setAdapter(trailerRecyclerAdapter);
+                        for (int i = 0; i <asd.size(); i++) {
+                            Log.d("testing",asd.get(i).getFilmId() + " " +filmId  );
+
+                        }
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+
+                    @Override
+                    public void onProgress() {
+
+                    }
+                });
+
+
+
+               // Realm realm = AppDelegate.getRealmInstance();
                 Film film = realm.where(Film.class).equalTo("id",filmId).findFirst();
 
                 //FilmsItem film = b.getParcelable("com.example.badvok.pupularmovies.FilmsItem");
@@ -129,6 +167,7 @@ public class FilmActivity extends AppCompatActivity {
                 mReviews = Review.getReviews(filmId);
                 mTrailers = Trailer.getTrailers(filmId);
                 showReviews();
+
 
 
             }

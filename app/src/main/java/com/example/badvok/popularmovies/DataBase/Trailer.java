@@ -1,5 +1,7 @@
 package com.example.badvok.popularmovies.DataBase;
 
+import android.util.Log;
+
 import com.example.badvok.popularmovies.AppDelegate;
 
 import java.util.List;
@@ -13,6 +15,7 @@ import io.realm.RealmObject;
 public class Trailer extends RealmObject {
 
     private String id;
+    private String filmId;
     private String iso_693_1;
     private String iso_3166_1;
     private String key;
@@ -21,8 +24,10 @@ public class Trailer extends RealmObject {
     private int size;
     private String type;
 
-    public Trailer(String id, String iso_693_1, String iso_3166_1, String key, String name, String site, int size, String type) {
+    public Trailer(String id, String filmId, String iso_693_1, String iso_3166_1, String key, String name, String site, int size, String type) {
+
         this.id = id;
+        this.filmId = filmId;
         this.iso_693_1 = iso_693_1;
         this.iso_3166_1 = iso_3166_1;
         this.key = key;
@@ -33,6 +38,14 @@ public class Trailer extends RealmObject {
     }
 
     public Trailer() {
+    }
+
+    public String getFilmId() {
+        return filmId;
+    }
+
+    public void setFilmId(String filmId) {
+        this.filmId = filmId;
     }
 
     public String getId() {
@@ -111,5 +124,23 @@ public class Trailer extends RealmObject {
         Realm realm = AppDelegate.getRealmInstance();
 
         return realm.where(Trailer.class).equalTo("id",id).findAll();
+    }
+
+
+    public static void commitNewTrailer(Trailer trailer){
+
+        Realm realm = AppDelegate.getRealmInstance();
+
+        //TODO realm listener
+        try{
+            realm.beginTransaction();
+            realm.copyToRealm(trailer);
+            realm.commitTransaction();
+
+        } catch (Exception e) {
+            Log.e("RealmError", "error" + e);
+            realm.cancelTransaction();
+
+        }
     }
 }

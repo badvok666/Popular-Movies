@@ -92,7 +92,7 @@ public class FetchReviewTask extends AsyncTask<String, Void, Void>{
                 }
             }
         } try {
-            createObject(reviewJsonStr);
+            createObject(reviewJsonStr,params[1]);
         } catch (JSONException e) {
             Log.e("JsonError", e.getMessage(), e);
             e.printStackTrace();
@@ -100,7 +100,7 @@ public class FetchReviewTask extends AsyncTask<String, Void, Void>{
         return null;
     }
 
-    private void createObject(String jsonStr)throws JSONException{
+    private void createObject(String jsonStr, String filmId)throws JSONException{
 
         String RESULTS = "results";
         String ID = "id";
@@ -116,6 +116,7 @@ public class FetchReviewTask extends AsyncTask<String, Void, Void>{
 
 
             Review review = new Review(
+                    filmId,
                     reviewJSON.getString(ID),
                     reviewJSON.getString(AUTHOR),
                     reviewJSON.getString(CONTENT),

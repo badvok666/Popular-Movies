@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("filmitem", "Films: " + films.get(i).getTitle());
                 }
                 mRecyclerView.setAdapter(frva);
-            }
+        }
 
             @Override
             public void onError() {
