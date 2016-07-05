@@ -19,8 +19,11 @@ import android.widget.TextView;
 import com.example.badvok.popularmovies.DataBase.Film;
 import com.example.badvok.popularmovies.DataBase.Review;
 import com.example.badvok.popularmovies.DataBase.Trailer;
+import com.example.badvok.popularmovies.FetchFilms.FetchReviewTask;
 import com.example.badvok.popularmovies.FetchFilms.FetchTrailerTask;
+import com.example.badvok.popularmovies.FetchFilms.Interfaces.FetchReviewsListener;
 import com.example.badvok.popularmovies.FetchFilms.Interfaces.FetchTrailerListener;
+import com.example.badvok.popularmovies.RecyclerView.RecyclerViewInterface;
 import com.example.badvok.popularmovies.RecyclerView.TrailerRecyclerAdapter;
 import com.squareup.picasso.Picasso;
 
@@ -86,13 +89,27 @@ public class FilmActivity extends AppCompatActivity {
      * A placeholder fragment containing fragment_film
      * a detail view for films
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class PlaceholderFragment extends Fragment implements RecyclerViewInterface {
+
+        TrailerRecyclerAdapter trailerRecyclerAdapter;
+
 
         List<Review> mReviews = null;
         List<Trailer> mTrailers = null;
         RecyclerView recyclerView;
-        TextView title, rating, releaseDate, description;
-        ImageView poster;
+
+        Boolean fetchedTrailers = false;
+        Boolean fetchedReviews = false;
+  //      TextView title, rating, releaseDate, description;
+ //       ImageView poster;
+
+        @Override
+        public void toggleRecyclerView(boolean showReviews) {
+            Log.d("testReview","dddd===" + showReviews);
+
+            trailerRecyclerAdapter.notifyDataSetChanged();
+
+        }
 
         public PlaceholderFragment() {
         }
@@ -102,11 +119,11 @@ public class FilmActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
 
             View rootView = inflater.inflate(R.layout.fragment_film, container, false);
-            title = (TextView) rootView.findViewById(R.id.title);
-            rating = (TextView) rootView.findViewById(R.id.rating);
-            releaseDate = (TextView) rootView.findViewById(R.id.release_date);
-            description = (TextView) rootView.findViewById(R.id.description);
-            poster = (ImageView) rootView.findViewById(R.id.poster);
+         //   title = (TextView) rootView.findViewById(R.id.title);
+         //   rating = (TextView) rootView.findViewById(R.id.rating);
+         //   releaseDate = (TextView) rootView.findViewById(R.id.release_date);
+       //     description = (TextView) rootView.findViewById(R.id.description);
+       //     poster = (ImageView) rootView.findViewById(R.id.poster);
             Intent intent = getActivity().getIntent();
 
 
@@ -116,13 +133,20 @@ public class FilmActivity extends AppCompatActivity {
 
 
 
+            recyclerView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
 
-            description.setMovementMethod(new ScrollingMovementMethod());
+                }
+            });
+
+        //    description.setMovementMethod(new ScrollingMovementMethod());
 
             if (intent != null && intent.hasExtra("com.example.badvok.pupularmovies.Film")) {
-                final Realm realm = AppDelegate.getRealmInstance();
+              //  final Realm realm = AppDelegate.getRealmInstance();
 
-                Bundle b = intent.getExtras();
+               // Bundle b = intent.getExtras();
                 final String filmId = intent.getStringExtra("com.example.badvok.pupularmovies.Film");
 
                 FetchTrailerTask fetchTrailerTask = new FetchTrailerTask();
@@ -131,12 +155,32 @@ public class FilmActivity extends AppCompatActivity {
                     @Override
                     public void onComplete() {
 
-                        List<Trailer> asd =  realm.where(Trailer.class).findAll();
-                        TrailerRecyclerAdapter trailerRecyclerAdapter = new TrailerRecyclerAdapter(realm.where(Trailer.class).equalTo("filmId",filmId).findAll());
-                        recyclerView.setAdapter(trailerRecyclerAdapter);
-                        for (int i = 0; i <asd.size(); i++) {
-                            Log.d("testing",asd.get(i).getFilmId() + " " +filmId  );
+                        fetchedTrailers = true;
+                        if(fetchedReviews){
+                            setUpRecyclerView(filmId);
+                        }
 
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+
+                    @Override
+                    public void onProgress() {
+
+                    }
+                });
+
+                FetchReviewTask fetchReviewTask = new FetchReviewTask();
+                fetchReviewTask.execute(AppDelegate.ORDER_PERAM, filmId);
+                fetchReviewTask.setFetchReviewsListener(new FetchReviewsListener() {
+                    @Override
+                    public void onComplete() {
+                        fetchedReviews = true;
+                        if(fetchedTrailers){
+                            setUpRecyclerView(filmId);
                         }
                     }
 
@@ -154,24 +198,45 @@ public class FilmActivity extends AppCompatActivity {
 
 
                // Realm realm = AppDelegate.getRealmInstance();
-                Film film = realm.where(Film.class).equalTo("id",filmId).findFirst();
+          //      Film film = realm.where(Film.class).equalTo("id",filmId).findFirst();
 
                 //FilmsItem film = b.getParcelable("com.example.badvok.pupularmovies.FilmsItem");
-                title.setText(film.getTitle());
-                rating.setText(film.getVote_average() + "/10");
-                releaseDate.setText(film.getRelease_date());
-                description.setText(film.getOverview());
-                Picasso.with(getContext()).load("http://image.tmdb.org/t/p/w500//" + film.getPoster_path()).into(poster);
-                Log.d("apistuff", film.getId());
+            //    title.setText(film.getTitle());
+            //    rating.setText(film.getVote_average() + "/10");
+            //    releaseDate.setText(film.getRelease_date());
+            //    description.setText(film.getOverview());
+            //    Picasso.with(getContext()).load("http://image.tmdb.org/t/p/w500//" + film.getPoster_path()).into(poster);
+            //    Log.d("apistuff", film.getId());
 
-                mReviews = Review.getReviews(filmId);
-                mTrailers = Trailer.getTrailers(filmId);
-                showReviews();
+           //     mReviews = Review.getReviews(filmId);
+           //     mTrailers = Trailer.getTrailers(filmId);
+          //      showReviews();
 
 
 
             }
             return rootView;
+        }
+
+        public void setUpRecyclerView(String filmId){
+
+
+
+            final Realm realm = AppDelegate.getRealmInstance();
+
+            List<Review> reviewslist = realm.where(Review.class).findAll();
+
+            for(Review r: reviewslist){
+                Log.d("review8",r.getAuthor()+" " +r.getFilmId());
+            }
+
+            trailerRecyclerAdapter = new TrailerRecyclerAdapter(realm.where(Trailer.class).equalTo("filmId",filmId).findAll(),
+                    realm.where(Review.class).equalTo("filmId",filmId).findAll(),
+                    realm.where(Film.class).equalTo("id",filmId).findFirst(),
+                    PlaceholderFragment.this);
+
+            recyclerView.setAdapter(trailerRecyclerAdapter);
+
         }
 
         public void showReviews(){

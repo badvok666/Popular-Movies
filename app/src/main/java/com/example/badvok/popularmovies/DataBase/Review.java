@@ -1,5 +1,7 @@
 package com.example.badvok.popularmovies.DataBase;
 
+import android.util.Log;
+
 import com.example.badvok.popularmovies.AppDelegate;
 
 import java.util.List;
@@ -82,6 +84,23 @@ public class Review extends RealmObject{
         Realm realm = AppDelegate.getRealmInstance();
 
         return realm.where(Review.class).equalTo("id",id).findAll();
+
+    }
+
+    public static void clearReviewsForFilm(String filmID){
+        Realm realm = AppDelegate.getRealmInstance();
+
+        try {
+            realm.beginTransaction();
+
+            realm.where(Review.class).equalTo("filmId",filmID).findAll().clear();
+
+            realm.commitTransaction();
+        } catch (Exception e) {
+            Log.e("Realm Error", "error" + e);
+            realm.cancelTransaction();
+
+        }
 
     }
 }

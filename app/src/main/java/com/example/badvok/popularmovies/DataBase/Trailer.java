@@ -126,6 +126,27 @@ public class Trailer extends RealmObject {
         return realm.where(Trailer.class).equalTo("id",id).findAll();
     }
 
+    public static void clearAllTrailers(){
+
+    }
+
+    public static void clearTrailersForFilm(String filmID){
+        Realm realm = AppDelegate.getRealmInstance();
+
+        try {
+            realm.beginTransaction();
+
+            realm.where(Trailer.class).equalTo("filmId",filmID).findAll().clear();
+
+            realm.commitTransaction();
+        } catch (Exception e) {
+            Log.e("Realm Error", "error" + e);
+            realm.cancelTransaction();
+
+        }
+
+    }
+
 
     public static void commitNewTrailer(Trailer trailer){
 

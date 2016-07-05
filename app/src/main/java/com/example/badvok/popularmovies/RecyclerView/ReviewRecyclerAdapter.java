@@ -1,6 +1,7 @@
 package com.example.badvok.popularmovies.RecyclerView;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,13 @@ import java.util.List;
 /**
  * Created by simon on 26-May-16.
  */
-public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAdapter.ReviewHolder> {
+public class ReviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     List<Review> reviews;
+
+    private static final int TYPE_HEADER = 0;
+    private static final int TYPE_ITEM = 1;
+
 
     public ReviewRecyclerAdapter(List<Review> reviews) {
         this.reviews = reviews;
@@ -30,29 +35,76 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
     }
 
     @Override
-    public void onBindViewHolder(ReviewRecyclerAdapter.ReviewHolder holder, int position) {
-            holder.author.setText(reviews.get(position).getAuthor());
-            holder.content.setText(reviews.get(position).getContent());
-            holder.url.setText(reviews.get(position).getUrl());
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+        if(holder instanceof ReviewHolderItem ){
+            ((ReviewHolderItem) holder).author.setText(reviews.get(position).getAuthor());
+            ((ReviewHolderItem) holder).content.setText(reviews.get(position).getContent());
+            ((ReviewHolderItem) holder).url.setText(reviews.get(position).getUrl());
+        }else if(holder instanceof ReviewHolderHeader){
+            ((ReviewHolderHeader) holder).author.setText("BLUBA BLEE BA BUGHA ");
+            ((ReviewHolderHeader) holder).content.setText("Argh here be header");
+            ((ReviewHolderHeader) holder).url.setText(reviews.get(position).getUrl());
+        }
+
+
     }
 
     @Override
-    public ReviewRecyclerAdapter.ReviewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v;
+        if(viewType == TYPE_ITEM){
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.reivew_row, parent, false);
+            Log.d("header", "normal");
+            return new ReviewHolderItem(v);
+        }else if(viewType ==TYPE_HEADER){
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.reivew_row, parent, false);
+            Log.d("header", "header");
+            return new ReviewHolderHeader(v);
+        }
 
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.reivew_row, parent, false);
-
-        return  new ReviewHolder(v);
+        throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
 
     }
 
-    public static class ReviewHolder extends RecyclerView.ViewHolder{
+    @Override
+    public int getItemViewType(int position) {
+        if(isPositionHeader(position)){
+            return TYPE_HEADER;
+        }
+        return TYPE_ITEM;
+    }
+
+    private boolean isPositionHeader(int position) {
+        return position == 0;
+    }
+
+    public static class ReviewHolderItem extends RecyclerView.ViewHolder{
 
         TextView author;
         TextView content;
         TextView url;
 
 
-        public ReviewHolder(View itemView) {
+        public ReviewHolderItem(View itemView) {
+            super(itemView);
+
+            author = (TextView)itemView.findViewById(R.id.author_tv);
+            content = (TextView)itemView.findViewById(R.id.content_tv);
+            url = (TextView)itemView.findViewById(R.id.url_tv);
+
+
+        }
+    }
+
+    public static class ReviewHolderHeader extends RecyclerView.ViewHolder{
+
+        TextView author;
+        TextView content;
+        TextView url;
+
+
+        public ReviewHolderHeader(View itemView) {
             super(itemView);
 
             author = (TextView)itemView.findViewById(R.id.author_tv);

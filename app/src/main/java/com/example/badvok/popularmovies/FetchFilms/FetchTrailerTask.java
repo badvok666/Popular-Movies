@@ -56,6 +56,8 @@ public class FetchTrailerTask extends AsyncTask<String, Void, Void>{
     @Override
     protected Void doInBackground(String... params) {
 
+        Trailer.clearTrailersForFilm(params[1]);
+
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
@@ -142,7 +144,7 @@ public class FetchTrailerTask extends AsyncTask<String, Void, Void>{
         for (int i = 0; i < resultsArray.length(); i++){
 
             JSONObject trailerJSON = resultsArray.getJSONObject(i);
-Log.d("testing", filmId);
+
             Trailer trailer = new Trailer(
                     trailerJSON.getString(ID),
                     filmId,
@@ -155,6 +157,7 @@ Log.d("testing", filmId);
                     trailerJSON.getString(TYPE)
 
             );
+
             Trailer.commitNewTrailer(trailer);
        /*     Realm realm = AppDelegate.getRealmInstance();
             try{

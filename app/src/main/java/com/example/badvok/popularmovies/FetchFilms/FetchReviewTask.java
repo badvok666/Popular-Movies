@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.example.badvok.popularmovies.AppDelegate;
 import com.example.badvok.popularmovies.DataBase.Review;
+import com.example.badvok.popularmovies.FetchFilms.Interfaces.FetchReviewsListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,10 +28,18 @@ import io.realm.Realm;
 public class FetchReviewTask extends AsyncTask<String, Void, Void>{
 
     String reviewJsonStr = null;
+    FetchReviewsListener listener;
+    int age;
 
+    public void setFetchReviewsListener (FetchReviewsListener listener){
+        this.listener = listener;
+    }
 
     @Override
     protected Void doInBackground(String... params) {
+
+        Review.clearReviewsForFilm(params[1]);
+
 
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
@@ -142,6 +151,10 @@ public class FetchReviewTask extends AsyncTask<String, Void, Void>{
 
     @Override
     protected void onPostExecute(Void aVoid) {
+        if (listener != null) {
+
+            listener.onComplete();
+        }
         super.onPostExecute(aVoid);
     }
 

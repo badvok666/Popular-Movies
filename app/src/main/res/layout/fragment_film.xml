@@ -4,93 +4,19 @@
     android:layout_height="match_parent"
     >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/materialGreen">
 
-        <TextView
-            android:padding="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TITLE"
-            android:textSize="30sp"
-            android:layout_gravity="center"
-            android:id="@+id/title"/>
 
-    </LinearLayout>
-
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
-
-            <LinearLayout
+            <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
 
-                <ImageView
-                    android:padding="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/poster"
-                    />
+                android:id="@+id/trailerRecyclerView">
+
+            </android.support.v7.widget.RecyclerView>
 
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/release_date"
-                        android:padding="10dp"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/rating"
-                        android:padding="10dp"
-                        />
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/review_btn"
-                        android:text="Read reviews"
-                        />
-
-                </LinearLayout>
 
 
-        </LinearLayout>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars = "vertical"
-                android:maxLines="40"
-                android:id="@+id/description"
-                android:padding="10dp"/>
-
-        </LinearLayout>
-
-</ScrollView>
-
-
-<android.support.v7.widget.RecyclerView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/trailerRecyclerView">
-
-</android.support.v7.widget.RecyclerView>
 
 
 </LinearLayout>
