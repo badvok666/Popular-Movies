@@ -18,6 +18,15 @@ public class Film extends RealmObject {
     private String release_date;
     private String overview;
     private double vote_average;
+    private boolean favorite;
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
 
     public String getTitle() {
         return title;
@@ -67,13 +76,14 @@ public class Film extends RealmObject {
         this.vote_average = vote_average;
     }
 
-    public Film(String title, String id, String poster_path, String release_date, String overview, double vote_average) {
+    public Film(String title, String id, String poster_path, String release_date, String overview, double vote_average, boolean favorite) {
         this.vote_average = vote_average;
         this.title = title;
         this.id = id;
         this.poster_path = poster_path;
         this.release_date = release_date;
         this.overview = overview;
+        this.favorite = favorite;
     }
     public Film() {
 
@@ -96,6 +106,54 @@ public class Film extends RealmObject {
 
     }
 
+    public static void addNewFilm(String title, String id, String poster_path, String release_date, String overview, double vote_average){
+        Realm realm = AppDelegate.getRealmInstance();
+
+        if(realm.where(Film.class).equalTo("id",id).findFirst() != null){
+            Log.d("edit", "editing: " + realm.where(Film.class).equalTo("id",id).findFirst().getId() );
+            try{
+                Film toEdit;
+                realm.beginTransaction();
+                toEdit = realm.where(Film.class).equalTo("id",id).findFirst();
+
+                toEdit.setTitle(title);
+                toEdit.setId(id);
+                toEdit.setPoster_path(poster_path);
+                toEdit.setRelease_date(release_date);
+                toEdit.setOverview(overview);
+                toEdit.setVote_average(vote_average);
+                realm.commitTransaction();
+
+            }catch (Exception e){
+                Log.e("RealmError", "error" + e);
+                realm.cancelTransaction();
+
+            }
+        }else{
+            Log.d("edit", "new: -- " + title );
+            try{
+                //realm.beginTransaction();
+
+                Film film = new Film();
+                film.setTitle(title);
+                film.setId(id);
+                film.setPoster_path(poster_path);
+                film.setRelease_date(release_date);
+                film.setOverview(overview);
+                film.setVote_average(vote_average);
+                film.setFavorite(false);
+
+                Film.commitNewFilm(film);
+                //realm.commitTransaction();
+
+            }catch (Exception e){
+                Log.e("RealmError", "error" + e);
+                realm.cancelTransaction();
+
+            }
+        }
+    }
+
     public static void commitNewFilm(Film film){
 
         Realm realm = AppDelegate.getRealmInstance();
@@ -110,6 +168,21 @@ public class Film extends RealmObject {
             Log.e("RealmError", "error" + e);
             realm.cancelTransaction();
 
+        }
+    }
+
+    public static void updateFavorite(String filmId, Boolean isFavorite){
+        Realm realm = AppDelegate.getRealmInstance();
+        try{
+            Film toEdit;
+            realm.beginTransaction();
+            toEdit = realm.where(Film.class).equalTo("id",filmId).findFirst();
+            toEdit.setFavorite(isFavorite);
+
+            realm.commitTransaction();
+        }catch (Exception e){
+            Log.e("Realm Error", "error" + e);
+            realm.cancelTransaction();
         }
     }
 }

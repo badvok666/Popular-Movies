@@ -19,10 +19,12 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import io.realm.Realm;
+
 /**
  * Created by simon on 31-May-16.
  */
-public class TrailerRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class FilmDetailRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Trailer> trailers;
     private List<Review> reviews;
@@ -41,7 +43,7 @@ public class TrailerRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     //todo try alternate constructor
-    public TrailerRecyclerAdapter(List<Trailer> trailers, List<Review> reviews, Film film, RecyclerViewInterface recyclerViewInterface) {
+    public FilmDetailRecyclerAdapter(List<Trailer> trailers, List<Review> reviews, Film film, RecyclerViewInterface recyclerViewInterface) {
         this.film = film;
         this.trailers = trailers;
         this.reviews = reviews;
@@ -66,7 +68,13 @@ public class TrailerRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemCount() {
-        return trailers.size();
+        if (trailers.size() == 0){
+            return 1;
+        }else{
+            Log.d("testing2", trailers.size()+"");
+            return trailers.size()+1;
+        }
+
     }
 
     @Override
@@ -76,14 +84,14 @@ public class TrailerRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             Log.d("possss", "position: " + position);
             if(trailers.size() != 0){
                 ((TrailerHolderItem)holder).image.setImageResource(R.mipmap.ic_launcher);
-                ((TrailerHolderItem)holder).name.setText(trailers.get(position).getName());
+                ((TrailerHolderItem)holder).name.setText(trailers.get(position-1).getName());
             }
 
         }else if(holder instanceof ReviewHolderItem){
             if(reviews.size() != 0){
                 ((ReviewHolderItem)holder).author.setText(reviews.get(0).getAuthor());
-                ((ReviewHolderItem)holder).content.setText(reviews.get(position).getContent());
-                ((ReviewHolderItem)holder).url.setText(reviews.get(position).getUrl());
+                ((ReviewHolderItem)holder).content.setText(reviews.get(position-1).getContent());
+                ((ReviewHolderItem)holder).url.setText(reviews.get(position-1).getUrl());
             }
         }else if(holder instanceof HolderHeader){
 
@@ -92,6 +100,7 @@ public class TrailerRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             ((HolderHeader)holder).rating.setText(film.getVote_average() + "/10");
             ((HolderHeader)holder).releaseDate.setText(film.getRelease_date());
             ((HolderHeader)holder).description.setText(film.getOverview());
+            ((HolderHeader)holder).favorite.setText(film.isFavorite()? "Remove from favorites":"Add to favorites");
          //   ((TrailerHolderHeader)holder).title.setText(film.getTitle());
             Picasso.with(AppDelegate.ctx).load("http://image.tmdb.org/t/p/w500//" + film.getPoster_path()).into(((HolderHeader)holder).poster);
 
@@ -99,7 +108,7 @@ public class TrailerRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public void setUpClickListeners(RecyclerView.ViewHolder holder){
-
+        final RecyclerView.ViewHolder holderruu = holder;
         if(holder instanceof HolderHeader){
 
             if(reviews.size() == 0){
@@ -120,6 +129,22 @@ public class TrailerRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         }
                         mRecyclerViewInterface.toggleRecyclerView(toggleShowReviews);
                     }
+                }
+            });
+
+            ((HolderHeader)holder).favorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    if(film.isFavorite()){
+                        Film.updateFavorite(film.getId(),false);
+                    }else{
+                        Film.updateFavorite(film.getId(),true);
+                    }
+
+                    ((HolderHeader)holderruu).favorite.setText(film.isFavorite()? "Remove from favorites":"Add to favorites");
+
                 }
             });
         }
@@ -168,7 +193,7 @@ public class TrailerRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         // ImageButton image;
         TextView title,rating,releaseDate,description;
         ImageView poster;
-        Button toggle;
+        Button toggle, favorite;
 
         public HolderHeader(View itemView) {
             super(itemView);
@@ -181,6 +206,7 @@ public class TrailerRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             description = (TextView) itemView.findViewById(R.id.description);
             poster = (ImageView) itemView.findViewById(R.id.poster);
             toggle = (Button)itemView.findViewById(R.id.toggle);
+            favorite = (Button)itemView.findViewById(R.id.favorite);
 
 
         }
@@ -191,13 +217,11 @@ public class TrailerRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         ImageButton image;
         TextView name;
 
-
         public TrailerHolderItem(View itemView) {
             super(itemView);
 
             image = (ImageButton)itemView.findViewById(R.id.image);
             name = (TextView)itemView.findViewById(R.id.title_tv);
-
 
         }
     }

@@ -11,5 +11,8 @@
     <item android:id="@+id/order_by_highest_rated" android:title="Order by Rating"
         android:orderInCategory="70" app:showAsAction="never"
         />
+    <item android:id="@+id/order_by_favorites"  android:title="Order by Favorites"
+        android:orderInCategory="60" app:showAsAction="never"
+        />
 
 </menu>

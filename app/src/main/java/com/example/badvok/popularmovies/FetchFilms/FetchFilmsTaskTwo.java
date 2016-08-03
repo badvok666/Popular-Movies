@@ -109,7 +109,7 @@ public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
 
     private void createObject(String jsonStr) throws JSONException{
 
-        Film.clearTable();
+       // Film.clearTable();
 
         final String RESULTS = "results";
         final String TITLE = "title";
@@ -128,17 +128,25 @@ public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
             JSONObject filmJSON = resultsArray.getJSONObject(i);
             String posterPath = filmJSON.getString(POSTER_PATH);
 
-
-            Film film = new Film(
+            Film.addNewFilm(
                     filmJSON.getString(TITLE),
                     filmJSON.getString(ID),
                     filmJSON.getString(POSTER_PATH),
                     filmJSON.getString(RELEASE_DATE),
                     filmJSON.getString(OVERVIEW),
                     filmJSON.getDouble(VOTE_AVERAGE)
-            );
+                  );
+          /*  Film film = new Film(
+                    filmJSON.getString(TITLE),
+                    filmJSON.getString(ID),
+                    filmJSON.getString(POSTER_PATH),
+                    filmJSON.getString(RELEASE_DATE),
+                    filmJSON.getString(OVERVIEW),
+                    filmJSON.getDouble(VOTE_AVERAGE),
+                    false
+            );*/
 
-            Film.commitNewFilm(film);
+          //  Film.commitNewFilm(film);
 
         }
 

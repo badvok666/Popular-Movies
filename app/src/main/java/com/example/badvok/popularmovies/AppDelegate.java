@@ -12,7 +12,12 @@ public class AppDelegate extends Application {
 
     public static Context ctx;
 
-    public static String ORDER_PERAM = " popularity.desc";
+    public static String POPULARITY_DECENDING = "popularity.desc";
+    public static String HIGHEST_RATED = "rating.desc";
+
+    public static String ORDER_PERAM = "popularity.desc";
+
+    public static boolean showOnlyFavorites = false;
 
     public static Realm getRealmInstance() {
         return Realm.getInstance(ctx);
@@ -23,4 +28,5 @@ public class AppDelegate extends Application {
         super.onCreate();
         AppDelegate.ctx = getApplicationContext();
     }
+
 }

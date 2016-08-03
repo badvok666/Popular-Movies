@@ -31,9 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView mRecyclerView;
 
-    ArrayList<FilmsItem> films2;
     List<Film>films;
-    String ORDER_PARAMATER = "popularity.desc";
+  //  String ORDER_PARAMATER = "popularity.desc";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.filmRecyclerView);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        refreshData(ORDER_PARAMATER);
+        refreshData(AppDelegate.ORDER_PERAM);
         onClickListeners();
     }
 
@@ -53,14 +52,11 @@ public class MainActivity extends AppCompatActivity {
                 new FilmRecyclerViewClickListener(getApplicationContext(), new FilmRecyclerViewClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Log.d("log", "asd" + position);
 
-                       // FilmsItem fm2 = films.get(position);
                         String filmId = films.get(position).getId();
                         Intent intent = new Intent(MainActivity.this, FilmActivity.class).putExtra("com.example.badvok.pupularmovies.Film", filmId);
                         startActivity(intent);
 
-                        //get review and trailer shit
                     }
                 })
         );
@@ -82,16 +78,25 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.refresh_list) {
-            refreshData(ORDER_PARAMATER);
+            refreshData(AppDelegate.ORDER_PERAM);
         } else if (id == R.id.order_by_pop_desc) {
-            ORDER_PARAMATER = "popularity.desc";
-            refreshData(ORDER_PARAMATER);
+            AppDelegate.showOnlyFavorites = false;
+            AppDelegate.ORDER_PERAM = AppDelegate.POPULARITY_DECENDING;
+            refreshData( AppDelegate.ORDER_PERAM);
         } else if (id == R.id.order_by_highest_rated) {
-            ORDER_PARAMATER = "rating.desc";
-            refreshData(ORDER_PARAMATER);
+            AppDelegate.showOnlyFavorites = false;
+            AppDelegate.ORDER_PERAM = AppDelegate.HIGHEST_RATED;
+            refreshData( AppDelegate.ORDER_PERAM);
+        } else if (id == R.id.order_by_favorites){
+            AppDelegate.showOnlyFavorites = true;
+            refreshData(AppDelegate.ORDER_PERAM);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void getOrderParam(){
+
     }
 
     /**
@@ -99,16 +104,6 @@ public class MainActivity extends AppCompatActivity {
      * @param order_param
      */
     public void refreshData(String order_param) {
-      /*   FetchFilmsTask fft = new FetchFilmsTask();
-        fft.execute(order_param);
-       fft.setFilmsDataListener(new FilmsDataListener() {
-            @Override
-            public void onFilmsPosterPathsPopulated(ArrayList<FilmsItem> data) {
-                films = data;
-                FilmRecyclerViewAdapter frva = new FilmRecyclerViewAdapter(films);
-                mRecyclerView.setAdapter(frva);
-            }
-        });*/
 
         FetchFilmsTaskTwo fetchFilmsTaskTwo = new FetchFilmsTaskTwo();
         fetchFilmsTaskTwo.execute(order_param);
@@ -118,7 +113,12 @@ public class MainActivity extends AppCompatActivity {
 
                 Realm realm = AppDelegate.getRealmInstance();
 
-                films = realm.where(Film.class).findAll();
+                if(AppDelegate.showOnlyFavorites){
+                    films = realm.where(Film.class).equalTo("favorite",true).findAll();
+                }else{
+                    films = realm.where(Film.class).findAll();
+                }
+
 
                 FilmRecyclerViewAdapter frva = new FilmRecyclerViewAdapter(films);
 
@@ -138,17 +138,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-      //  FetchReviewTask frt = new FetchReviewTask();
-     //   frt.execute(order_param);
-
-       // Realm realm = AppDelegate.getRealmInstance();
-       // List<Review> reviews = realm.where(Review.class).findAll();
-
-      //  for (int i = 0; i < reviews.size(); i++) {
-     //       Log.d("reviews",reviews.get(i).getAuthor()+"");
-     //   }
-
 
     }
 }
