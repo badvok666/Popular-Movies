@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.badvok.popularmovies.DataBase.Favorites;
 import com.example.badvok.popularmovies.DataBase.Film;
 import com.example.badvok.popularmovies.DataBase.Review;
 import com.example.badvok.popularmovies.FetchFilms.FetchFilmsTask;
@@ -95,15 +96,13 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void getOrderParam(){
-
-    }
 
     /**
      * Gets the data on AyncTask based on the provided order paramater
      * @param order_param
      */
     public void refreshData(String order_param) {
+
 
         FetchFilmsTaskTwo fetchFilmsTaskTwo = new FetchFilmsTaskTwo();
         fetchFilmsTaskTwo.execute(order_param);
@@ -113,8 +112,21 @@ public class MainActivity extends AppCompatActivity {
 
                 Realm realm = AppDelegate.getRealmInstance();
 
+                films = new ArrayList<Film>();
+
                 if(AppDelegate.showOnlyFavorites){
-                    films = realm.where(Film.class).equalTo("favorite",true).findAll();
+
+                    List<Favorites> allFavorites = realm.where(Favorites.class).equalTo("favorite",true).findAll();
+
+                    for (int i = 0; i < allFavorites.size(); i++) {
+
+                        Film film = realm.where(Film.class).equalTo("id",allFavorites.get(i).getFilmId()).findFirst();
+                        films.add(film);
+
+                    }
+
+
+                    //films = realm.where(Film.class).equalTo("favorites",true).findAll();
                 }else{
                     films = realm.where(Film.class).findAll();
                 }
@@ -126,6 +138,11 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("filmitem", "Films: " + films.get(i).getTitle());
                 }
                 mRecyclerView.setAdapter(frva);
+
+                List<Favorites> favorites = realm.where(Favorites.class).findAll();
+                for (int i = 0; i < favorites.size(); i++) {
+                    Log.d("favorites","size: " +favorites.size() + " favorites: " + favorites.get(i).getFilmId()+ " :: " + favorites.get(i).getFavorite());
+                }
         }
 
             @Override

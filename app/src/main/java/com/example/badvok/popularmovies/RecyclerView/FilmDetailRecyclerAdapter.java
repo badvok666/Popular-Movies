@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.badvok.popularmovies.AppDelegate;
+import com.example.badvok.popularmovies.DataBase.Favorites;
 import com.example.badvok.popularmovies.DataBase.Film;
 import com.example.badvok.popularmovies.DataBase.Review;
 import com.example.badvok.popularmovies.DataBase.Trailer;
@@ -28,6 +29,7 @@ public class FilmDetailRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 
     private List<Trailer> trailers;
     private List<Review> reviews;
+    private boolean isFavorite;
     private Film film;
 
     private static final int TYPE_HEADER = 0;
@@ -43,7 +45,8 @@ public class FilmDetailRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     //todo try alternate constructor
-    public FilmDetailRecyclerAdapter(List<Trailer> trailers, List<Review> reviews, Film film, RecyclerViewInterface recyclerViewInterface) {
+    public FilmDetailRecyclerAdapter(List<Trailer> trailers, List<Review> reviews, Film film,Boolean isFavorite, RecyclerViewInterface recyclerViewInterface) {
+        this.isFavorite = isFavorite;
         this.film = film;
         this.trailers = trailers;
         this.reviews = reviews;
@@ -100,7 +103,7 @@ public class FilmDetailRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
             ((HolderHeader)holder).rating.setText(film.getVote_average() + "/10");
             ((HolderHeader)holder).releaseDate.setText(film.getRelease_date());
             ((HolderHeader)holder).description.setText(film.getOverview());
-            ((HolderHeader)holder).favorite.setText(film.isFavorite()? "Remove from favorites":"Add to favorites");
+            ((HolderHeader)holder).favorite.setText(isFavorite? "Remove from favorites":"Add to favorites");
          //   ((TrailerHolderHeader)holder).title.setText(film.getTitle());
             Picasso.with(AppDelegate.ctx).load("http://image.tmdb.org/t/p/w500//" + film.getPoster_path()).into(((HolderHeader)holder).poster);
 
@@ -137,13 +140,19 @@ public class FilmDetailRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
                 public void onClick(View v) {
 
 
-                    if(film.isFavorite()){
-                        Film.updateFavorite(film.getId(),false);
+
+                    if(isFavorite){
+
+                        isFavorite = false;
+                        Favorites.editFavorite(film.getId(),false);
+
                     }else{
-                        Film.updateFavorite(film.getId(),true);
+
+                        isFavorite = true;
+                        Favorites.editFavorite(film.getId(),true);
                     }
 
-                    ((HolderHeader)holderruu).favorite.setText(film.isFavorite()? "Remove from favorites":"Add to favorites");
+                    ((HolderHeader)holderruu).favorite.setText(isFavorite? "Remove from favorites":"Add to favorites");
 
                 }
             });

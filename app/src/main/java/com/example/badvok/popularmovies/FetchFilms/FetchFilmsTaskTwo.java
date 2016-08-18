@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.badvok.popularmovies.AppDelegate;
+import com.example.badvok.popularmovies.DataBase.Favorites;
 import com.example.badvok.popularmovies.DataBase.Film;
 import com.example.badvok.popularmovies.FetchFilms.Interfaces.FetchFilmsListener;
 
@@ -123,7 +124,7 @@ public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
         JSONArray resultsArray = filmsListJSON.getJSONArray(RESULTS);
 
         String[] posterPaths = new String[resultsArray.length()];
-
+        Film.clearTable();
         for (int i = 0; i < resultsArray.length(); i++) {
             JSONObject filmJSON = resultsArray.getJSONObject(i);
             String posterPath = filmJSON.getString(POSTER_PATH);
@@ -136,17 +137,10 @@ public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
                     filmJSON.getString(OVERVIEW),
                     filmJSON.getDouble(VOTE_AVERAGE)
                   );
-          /*  Film film = new Film(
-                    filmJSON.getString(TITLE),
-                    filmJSON.getString(ID),
-                    filmJSON.getString(POSTER_PATH),
-                    filmJSON.getString(RELEASE_DATE),
-                    filmJSON.getString(OVERVIEW),
-                    filmJSON.getDouble(VOTE_AVERAGE),
-                    false
-            );*/
 
-          //  Film.commitNewFilm(film);
+
+            Favorites.addToFavorites(filmJSON.getString(ID));
+
 
         }
 

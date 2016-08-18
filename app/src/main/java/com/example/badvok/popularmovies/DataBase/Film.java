@@ -4,6 +4,9 @@ import android.util.Log;
 
 import com.example.badvok.popularmovies.AppDelegate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.realm.Realm;
 import io.realm.RealmObject;
 
@@ -18,15 +21,17 @@ public class Film extends RealmObject {
     private String release_date;
     private String overview;
     private double vote_average;
-    private boolean favorite;
+   // private boolean favorite;
 
-    public boolean isFavorite() {
-        return favorite;
-    }
+    private static List<String>favorites;
 
-    public void setFavorite(boolean favorite) {
-        this.favorite = favorite;
-    }
+  //  public boolean isFavorite() {
+  //      return favorite;
+  //  }
+
+   // public void setFavorite(boolean favorite) {
+  //      this.favorite = favorite;
+  //  }
 
     public String getTitle() {
         return title;
@@ -76,14 +81,14 @@ public class Film extends RealmObject {
         this.vote_average = vote_average;
     }
 
-    public Film(String title, String id, String poster_path, String release_date, String overview, double vote_average, boolean favorite) {
+    public Film(String title, String id, String poster_path, String release_date, String overview, double vote_average) {
         this.vote_average = vote_average;
         this.title = title;
         this.id = id;
         this.poster_path = poster_path;
         this.release_date = release_date;
         this.overview = overview;
-        this.favorite = favorite;
+       // this.favorite = favorite;
     }
     public Film() {
 
@@ -92,6 +97,15 @@ public class Film extends RealmObject {
     public static void clearTable(){
         //TODO compare id
         Realm realm = AppDelegate.getRealmInstance();
+      //  List<Film>films = realm.where(Film.class).equalTo("favorite",true).findAll();
+        //TODO is this how to check boolean in realm?
+      //  favorites = new ArrayList<String>();
+     //   favorites.clear();
+     //   for (int i = 0; i < films.size(); i++) {
+     //       favorites.add(films.get(i).getId());
+     //   }
+
+
         try {
             realm.beginTransaction();
 
@@ -103,12 +117,42 @@ public class Film extends RealmObject {
             realm.cancelTransaction();
 
         }
-
     }
 
     public static void addNewFilm(String title, String id, String poster_path, String release_date, String overview, double vote_average){
         Realm realm = AppDelegate.getRealmInstance();
 
+        try{
+            //realm.beginTransaction();
+            Log.d("edit", "adding: " +title );
+            Film film = new Film();
+            film.setTitle(title);
+            film.setId(id);
+            film.setPoster_path(poster_path);
+            film.setRelease_date(release_date);
+            film.setOverview(overview);
+            film.setVote_average(vote_average);
+         /*   for (int i = 0; i < favorites.size(); i++) {
+                if (favorites.get(i).equals(id)){
+                    film.setFavorite(true);
+                }else{
+                    film.setFavorite(false);
+                }
+            }
+            if (favorites.size()==0){
+                film.setFavorite(false);
+            }*/
+
+            Film.commitNewFilm(film);
+            //realm.commitTransaction();
+
+        }catch (Exception e){
+            Log.e("RealmError", "error" + e);
+            realm.cancelTransaction();
+
+        }
+
+        /*
         if(realm.where(Film.class).equalTo("id",id).findFirst() != null){
             Log.d("edit", "editing: " + realm.where(Film.class).equalTo("id",id).findFirst().getId() );
             try{
@@ -151,7 +195,7 @@ public class Film extends RealmObject {
                 realm.cancelTransaction();
 
             }
-        }
+        }*/
     }
 
     public static void commitNewFilm(Film film){
@@ -172,8 +216,11 @@ public class Film extends RealmObject {
     }
 
     public static void updateFavorite(String filmId, Boolean isFavorite){
-        Realm realm = AppDelegate.getRealmInstance();
-        try{
+       // Realm realm = AppDelegate.getRealmInstance();
+
+        favorites.add(filmId);
+
+      /*  try{
             Film toEdit;
             realm.beginTransaction();
             toEdit = realm.where(Film.class).equalTo("id",filmId).findFirst();
@@ -183,6 +230,6 @@ public class Film extends RealmObject {
         }catch (Exception e){
             Log.e("Realm Error", "error" + e);
             realm.cancelTransaction();
-        }
+        }*/
     }
 }

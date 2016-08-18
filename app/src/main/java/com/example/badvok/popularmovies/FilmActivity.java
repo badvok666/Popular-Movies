@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.badvok.popularmovies.DataBase.Favorites;
 import com.example.badvok.popularmovies.DataBase.Film;
 import com.example.badvok.popularmovies.DataBase.Review;
 import com.example.badvok.popularmovies.DataBase.Trailer;
@@ -26,6 +27,7 @@ import com.example.badvok.popularmovies.RecyclerView.FilmDetailRecyclerAdapter;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by badvok on 29-Nov-15.
@@ -92,7 +94,6 @@ public class FilmActivity extends AppCompatActivity {
 
         @Override
         public void toggleRecyclerView(boolean showReviews) {
-            Log.d("testReview","dddd===" + showReviews);
 
             filmDetailRecyclerAdapter.notifyDataSetChanged();
 
@@ -183,16 +184,27 @@ public class FilmActivity extends AppCompatActivity {
 
             List<Review> reviewslist = realm.where(Review.class).findAll();
 
-            for(Review r: reviewslist){
-                Log.d("review8",r.getAuthor()+" " +r.getFilmId());
+            RealmResults<Favorites> result = realm.where(Favorites.class).equalTo("filmId",filmId).findAll();
+
+            if(!result.isEmpty())
+            {
+                boolean isFavorite = result.first().getFavorite();
+                             filmDetailRecyclerAdapter = new FilmDetailRecyclerAdapter(realm.where(Trailer.class).equalTo("filmId",filmId).findAll(),
+                        realm.where(Review.class).equalTo("filmId",filmId).findAll(),
+                        realm.where(Film.class).equalTo("id",filmId).findFirst(),
+                        isFavorite,
+                        PlaceholderFragment.this);
+
+                recyclerView.setAdapter(filmDetailRecyclerAdapter);
+            }
+            else
+            {
+                //TODO handel
             }
 
-            filmDetailRecyclerAdapter = new FilmDetailRecyclerAdapter(realm.where(Trailer.class).equalTo("filmId",filmId).findAll(),
-                    realm.where(Review.class).equalTo("filmId",filmId).findAll(),
-                    realm.where(Film.class).equalTo("id",filmId).findFirst(),
-                    PlaceholderFragment.this);
+           //boolean isFavorite = realm.where(Favorites.class).equalTo("filmId",filmId).isNotNull("filmId").findFirst().getFavorite();
 
-            recyclerView.setAdapter(filmDetailRecyclerAdapter);
+
 
         }
 
