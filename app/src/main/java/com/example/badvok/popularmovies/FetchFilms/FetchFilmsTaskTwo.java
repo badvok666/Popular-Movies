@@ -27,7 +27,7 @@ import io.realm.Realm;
  */
 public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
 
-    String filmsJsonStr;
+
     FetchFilmsListener listener;
 
     public void setFetchFilmsListener(FetchFilmsListener listener){
@@ -37,6 +37,7 @@ public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
 
     @Override
     protected Void doInBackground(String... params) {
+
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
@@ -80,8 +81,13 @@ public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
                 return null;
             }
 
-            filmsJsonStr = buffer.toString();
 
+            try {
+                createObject(buffer.toString());
+            } catch (JSONException e) {
+                Log.e("JsonError", e.getMessage(), e);
+                e.printStackTrace();
+            }
 
         } catch (IOException e) {
             Log.e("FetchFilmsTask", "Error ", e);
@@ -98,12 +104,7 @@ public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
             }
         }
 
-        try {
-            createObject(filmsJsonStr);
-        } catch (JSONException e) {
-            Log.e("JsonError", e.getMessage(), e);
-            e.printStackTrace();
-        }
+
 
         return null;
     }
@@ -120,15 +121,15 @@ public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
         final String OVERVIEW = "overview";
         final String VOTE_AVERAGE = "vote_average";
 
-        JSONObject filmsListJSON = new JSONObject(filmsJsonStr);
+        JSONObject filmsListJSON = new JSONObject(jsonStr);
         JSONArray resultsArray = filmsListJSON.getJSONArray(RESULTS);
 
-        String[] posterPaths = new String[resultsArray.length()];
+       // String[] posterPaths = new String[resultsArray.length()];
         Film.clearTable();
         for (int i = 0; i < resultsArray.length(); i++) {
             JSONObject filmJSON = resultsArray.getJSONObject(i);
-            String posterPath = filmJSON.getString(POSTER_PATH);
-
+          //  String posterPath = filmJSON.getString(POSTER_PATH);
+//TODO look at singleton
             Film.addNewFilm(
                     filmJSON.getString(TITLE),
                     filmJSON.getString(ID),
@@ -137,7 +138,6 @@ public class FetchFilmsTaskTwo extends AsyncTask<String, Void, Void> {
                     filmJSON.getString(OVERVIEW),
                     filmJSON.getDouble(VOTE_AVERAGE)
                   );
-
 
             Favorites.addToFavorites(filmJSON.getString(ID));
 

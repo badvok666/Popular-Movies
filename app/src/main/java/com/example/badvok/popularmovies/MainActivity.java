@@ -1,5 +1,8 @@
 package com.example.badvok.popularmovies;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,12 +16,7 @@ import android.view.View;
 
 import com.example.badvok.popularmovies.DataBase.Favorites;
 import com.example.badvok.popularmovies.DataBase.Film;
-import com.example.badvok.popularmovies.DataBase.Review;
-import com.example.badvok.popularmovies.FetchFilms.FetchFilmsTask;
 import com.example.badvok.popularmovies.FetchFilms.FetchFilmsTaskTwo;
-import com.example.badvok.popularmovies.FetchFilms.FetchReviewTask;
-import com.example.badvok.popularmovies.FetchFilms.FilmsDataListener;
-import com.example.badvok.popularmovies.FetchFilms.FilmsItem;
 import com.example.badvok.popularmovies.FetchFilms.Interfaces.FetchFilmsListener;
 import com.example.badvok.popularmovies.RecyclerView.FilmRecyclerViewAdapter;
 import com.example.badvok.popularmovies.RecyclerView.FilmRecyclerViewClickListener;
@@ -32,8 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView mRecyclerView;
 
-    List<Film>films;
-  //  String ORDER_PARAMATER = "popularity.desc";
+    List<Film> films;
+    //  String ORDER_PARAMATER = "popularity.desc";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         refreshData(AppDelegate.ORDER_PERAM);
         onClickListeners();
     }
+
+
 
     public void onClickListeners() {
         mRecyclerView.addOnItemTouchListener(
@@ -83,12 +83,12 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.order_by_pop_desc) {
             AppDelegate.showOnlyFavorites = false;
             AppDelegate.ORDER_PERAM = AppDelegate.POPULARITY_DECENDING;
-            refreshData( AppDelegate.ORDER_PERAM);
+            refreshData(AppDelegate.ORDER_PERAM);
         } else if (id == R.id.order_by_highest_rated) {
             AppDelegate.showOnlyFavorites = false;
             AppDelegate.ORDER_PERAM = AppDelegate.HIGHEST_RATED;
-            refreshData( AppDelegate.ORDER_PERAM);
-        } else if (id == R.id.order_by_favorites){
+            refreshData(AppDelegate.ORDER_PERAM);
+        } else if (id == R.id.order_by_favorites) {
             AppDelegate.showOnlyFavorites = true;
             refreshData(AppDelegate.ORDER_PERAM);
         }
@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Gets the data on AyncTask based on the provided order paramater
+     *
      * @param order_param
      */
     public void refreshData(String order_param) {
@@ -114,20 +115,20 @@ public class MainActivity extends AppCompatActivity {
 
                 films = new ArrayList<Film>();
 
-                if(AppDelegate.showOnlyFavorites){
+                if (AppDelegate.showOnlyFavorites) {
 
-                    List<Favorites> allFavorites = realm.where(Favorites.class).equalTo("favorite",true).findAll();
+                    List<Favorites> allFavorites = realm.where(Favorites.class).equalTo("favorite", true).findAll();
 
                     for (int i = 0; i < allFavorites.size(); i++) {
 
-                        Film film = realm.where(Film.class).equalTo("id",allFavorites.get(i).getFilmId()).findFirst();
+                        Film film = realm.where(Film.class).equalTo("id", allFavorites.get(i).getFilmId()).findFirst();
                         films.add(film);
 
                     }
 
 
                     //films = realm.where(Film.class).equalTo("favorites",true).findAll();
-                }else{
+                } else {
                     films = realm.where(Film.class).findAll();
                 }
 
@@ -141,9 +142,9 @@ public class MainActivity extends AppCompatActivity {
 
                 List<Favorites> favorites = realm.where(Favorites.class).findAll();
                 for (int i = 0; i < favorites.size(); i++) {
-                    Log.d("favorites","size: " +favorites.size() + " favorites: " + favorites.get(i).getFilmId()+ " :: " + favorites.get(i).getFavorite());
+                    Log.d("favorites", "size: " + favorites.size() + " favorites: " + favorites.get(i).getFilmId() + " :: " + favorites.get(i).getFavorite());
                 }
-        }
+            }
 
             @Override
             public void onError() {

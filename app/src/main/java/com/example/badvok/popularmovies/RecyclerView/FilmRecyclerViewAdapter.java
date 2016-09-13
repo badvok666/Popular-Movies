@@ -49,8 +49,8 @@ public class FilmRecyclerViewAdapter extends RecyclerView.Adapter<FilmRecyclerVi
     public FilmViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view, parent, false);
-        FilmViewHolder fvh = new FilmViewHolder(v);
-        return fvh;
+
+        return new FilmViewHolder(v);
     }
 
 

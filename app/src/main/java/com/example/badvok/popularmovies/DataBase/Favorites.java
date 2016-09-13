@@ -79,7 +79,6 @@ public class Favorites extends RealmObject {
                 isFavorite = false;
             }
 
-
         }
 
         try{
